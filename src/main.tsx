@@ -5,12 +5,12 @@ import App from '@/App';
 import '@/index.css';
 
 /**
- * Application entry point.
+ * Application entry point with error boundary and loading fallback.
  */
 const rootElement = document.getElementById('root')!;
 createRoot(rootElement).render(
   <StrictMode>
-    <BrowserRouter>
+    <BrowserRouter basename="/portfolio">
       <App />
     </BrowserRouter>
   </StrictMode>,

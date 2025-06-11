@@ -6,7 +6,7 @@ import Home from '@/pages/Home';
 import { defaultAboutProps, defaultContactProps, defaultFooterProps, defaultWorkProps } from '@/utils/config';
 import { containerPadding } from '@/utils/styles';
 import { scrollToTop } from '@/utils/helpers';
-import LogoImage from '../public/together.svg';
+import LogoImage from '/together.svg';
 
 // Lazy-loaded pages
 const About = lazy(() => import('@/pages/About'));
