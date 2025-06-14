@@ -1,25 +1,16 @@
-import { memo } from "react";
-import Hero from "@/components/organisms/Hero";
-import AboutSection from "@/components/organisms/About";
-import WorkSection from "@/components/organisms/Work";
-import ContactSection from "@/components/organisms/Contact";
-import {
-  defaultAboutProps,
-  defaultContactProps,
-  defaultHeroProps,
-  defaultWorkProps,
-} from "@/utils/config";
+import { memo } from 'react';
+import HeroGeometric from '@/components/organisms/Hero';
+import About from '@/components/organisms/About';
+import WorkTimeline from '@/components/organisms/Work';
+import Contact from '@/components/organisms/Contact';
 
-/**
- * Responsive Home page component combining Hero, About, Work, and Contact sections.
- */
 const Home = () => {
   return (
     <div className="flex flex-col w-full">
-      <Hero {...defaultHeroProps} />
-      <AboutSection {...defaultAboutProps} />
-      <WorkSection {...defaultWorkProps} />
-      <ContactSection {...defaultContactProps} />
+      <HeroGeometric />
+      <About />
+      <WorkTimeline />
+      <Contact />
     </div>
   );
 };

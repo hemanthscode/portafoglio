@@ -1,94 +1,253 @@
+import { create } from 'zustand';
+import { Code, Cpu, Globe, Camera, Music, Book, Gamepad2, Mountain, Zap, Users } from 'lucide-react';
 import type { AboutProps, ContactProps, FooterProps, HeroProps, NavItem, WorkProps } from './types';
+import { CardType, ProjectCategory, Size } from './types';
 
-export const navItems: NavItem[] = [
-  { label: 'About', href: '/about' },
-  { label: 'Work', href: '/work' },
-  { label: 'Contact', href: '/contact' },
-];
+// Zustand store for global config
+interface PortfolioState {
+  hero: HeroProps;
+  about: AboutProps;
+  work: WorkProps;
+  contact: ContactProps;
+  footer: FooterProps;
+  navItems: NavItem[];
+}
 
-export const theme = {
-  colors: {
-    primary: '#1E3A8A',
-    'primary-dark': '#1E3A8A',
-    secondary: '#F59E0B',
-    'secondary-dark': '#D97706',
-    accent: '#6B7280',
-    background: '#F9FAFB',
-    text: '#111827',
+export const usePortfolioStore = create<PortfolioState>(() => ({
+  hero: {
+    name: 'Hemanth Sayimpu',
+    headline: 'Shaping the Modern Web',
+    subheadline: 'Harnessing design, code, and a bit of AI to create human-friendly experiences.',
+    githubUrl: 'https://github.com/hemanthscode',
+    ctaText: 'Let’s Chat',
+    ctaLink: '/contact',
   },
-  typography: {
-    fontFamily: 'Inter, sans-serif',
-    sizes: {
-      xs: '0.75rem',
-      sm: '0.875rem',
-      base: '1rem',
-      lg: '1.125rem',
-      xl: '1.25rem',
-      '2xl': '1.5rem',
-      '3xl': '1.875rem',
-      '4xl': '2.25rem',
-      '5xl': '3rem',
-      '6xl': '3.75rem',
-      '7xl': '4.5rem',
-    },
-  },
-  spacing: {
-    sm: '4px',
-    md: '8px',
-    lg: '16px',
-    xl: '24px',
-    '2xl': '32px',
-    '3xl': '48px',
-  },
-  breakpoints: {
-    sm: '320px',
-    md: '768px',
-    lg: '1024px',
-  },
-};
-
-export const defaultHeroProps: HeroProps = {
-name: 'Hemanth',
-headline: 'Shaping the Modern Web',
-subheadline: 'Harnessing design, code, and a bit of AI to create human-friendly experiences.',
-githubUrl: 'https://github.com/hemanthscode',
-ctaText: 'Let’s Chat',
-ctaLink: '/contact',
-};
-
-export const defaultAboutProps: AboutProps = {
-title: 'About Me',
-description: 'As a dedicated learner, I thrive on turning ideas into functional web applications. I’m excited to join a collaborative environment where I can grow as a developer, contribute to impactful projects, and refine my skills in frontend and backend development.',
+  about: {
+    title: 'About Me',
+    description:
+      'As a dedicated learner, I thrive on turning ideas into functional web applications. I’m excited to join a collaborative environment where I can grow as a developer, contribute to impactful projects, and refine my skills in frontend and backend development.',
     skills: ['React', 'TypeScript', 'Tailwind CSS', 'Python', 'FastAPI', 'MongoDB'],
-githubUrl: 'https://github.com/hemanthscode',
-};
-
-export const defaultContactProps: ContactProps = {
-  title: 'Get in Touch',
-  description: 'Interested in working together? Send me a message or request my resume.',
-  email: 'hemanths7.dev@gmail.com',
-};
-
-export const defaultWorkProps: WorkProps = {
-  title: 'My Projects',
-  projects: [
-    {
-      title: 'React Portfolio',
-      description: 'A responsive portfolio built with React, TypeScript, and Tailwind CSS.',
-      githubUrl: 'https://github.com/hemanthscode/react-portfolio',
-      tags: ['React', 'TypeScript', 'Tailwind'],
+    githubUrl: 'https://github.com/hemanthscode',
+    cards: [
+      {
+        id: 1,
+        type: CardType.Hero,
+        title: 'Hemanth Sayimpu',
+        subtitle: 'Full-Stack Developer',
+        content: 'Turning ideas into digital reality, one line of code at a time.',
+        bgColor: 'bg-gradient-to-br from-indigo-600 to-purple-700',
+        textColor: 'text-white',
+        size: Size.Large,
+        icon: Code,
+      },
+      {
+        id: 2,
+        type: CardType.Story,
+        title: 'The Spark',
+        content:
+          'It all started with a broken calculator app. Instead of frustration, I felt curiosity. That moment changed everything - I realized I wanted to build, not just use technology.',
+        bgColor: 'bg-yellow-50',
+        textColor: 'text-gray-900',
+        size: Size.Medium,
+        icon: Zap,
+      },
+      {
+        id: 3,
+        type: CardType.Skill,
+        title: 'Frontend Magic',
+        content: 'React, Vue, Angular - I speak fluent component. Creating interfaces that feel like poetry in motion.',
+        bgColor: 'bg-blue-50',
+        textColor: 'text-gray-900',
+        size: Size.Small,
+        icon: Globe,
+      },
+      {
+        id: 4,
+        type: CardType.Image,
+        title: 'Workspace Vibes',
+        content: 'Workspace Image',
+        bgColor: 'bg-gray-100',
+        textColor: 'text-gray-500',
+        size: Size.Medium,
+        icon: null,
+      },
+      {
+        id: 5,
+        type: CardType.Skill,
+        title: 'Backend Mastery',
+        content: 'Node.js, Python, databases that scale. I architect the invisible foundations that make applications soar.',
+        bgColor: 'bg-green-50',
+        textColor: 'text-gray-900',
+        size: Size.Small,
+        icon: Cpu,
+      },
+      {
+        id: 6,
+        type: CardType.Passion,
+        title: 'Beyond Code',
+        content: 'Photography captures moments, music creates emotions, and hiking clears the mind. These passions fuel my creativity.',
+        bgColor: 'bg-purple-50',
+        textColor: 'text-gray-900',
+        size: Size.Large,
+        icon: Camera,
+      },
+      {
+        id: 7,
+        type: CardType.Stat,
+        title: '50+',
+        content: 'Projects Completed',
+        bgColor: 'bg-orange-50',
+        textColor: 'text-gray-900',
+        size: Size.Medium,
+        icon: Book,
+      },
+      {
+        id: 8,
+        type: CardType.Story,
+        title: 'Team Player',
+        content:
+          'Collaboration isn’t just about code reviews. It’s about building something bigger than yourself with people who share your vision.',
+        bgColor: 'bg-teal-50',
+        textColor: 'text-gray-900',
+        size: Size.Medium,
+        icon: Users,
+      },
+      {
+        id: 9,
+        type: CardType.Image,
+        title: 'Gaming Setup',
+        content: 'Gaming Setup Image',
+        bgColor: 'bg-gray-100',
+        textColor: 'text-gray-500',
+        size: Size.Small,
+        icon: Gamepad2,
+      },
+      {
+        id: 10,
+        type: CardType.Philosophy,
+        title: 'Design Thinking',
+        content: 'Every pixel has purpose. Every interaction tells a story. Good design isn’t just how it looks - it’s how it works.',
+        bgColor: 'bg-pink-50',
+        textColor: 'text-gray-900',
+        size: Size.Medium,
+        icon: null,
+      },
+      {
+        id: 11,
+        type: CardType.Hobby,
+        title: 'Music Producer',
+        content:
+          'Creating beats and melodies in my spare time. Music and code share the same rhythm - both are about creating harmony from chaos.',
+        bgColor: 'bg-indigo-50',
+        textColor: 'text-gray-900',
+        size: Size.Small,
+        icon: Music,
+      },
+      {
+        id: 12,
+        type: CardType.Adventure,
+        title: 'Mountain Explorer',
+        content: 'Weekend warrior seeking peaks and perspectives. The mountains teach patience - something every developer needs.',
+        bgColor: 'bg-emerald-50',
+        textColor: 'text-gray-900',
+        size: Size.Large,
+        icon: Mountain,
+      },
+    ],
+    cta: {
+      title: 'Ready to Create Something Amazing?',
+      description: 'Let’s turn your ideas into reality. Every great project starts with a conversation.',
+      buttonText: 'Let’s Connect',
+      buttonLink: '/contact',
     },
-    {
-      title: 'Python API',
-      description: 'A RESTful API built with FastAPI and Python.',
-      githubUrl: 'https://github.com/hemanthscode/python-api',
-      tags: ['Python', 'FastAPI', 'PostgreSQL'],
-    },
+  },
+  work: {
+    title: 'My Projects',
+    description:
+      'A collection of projects showcasing modern web development, innovative solutions, and cutting-edge technologies crafted with passion and precision.',
+    projects: [
+      {
+        id: 1,
+        title: 'E-Commerce Platform',
+        description: 'Full-stack e-commerce solution with advanced analytics and payment integration',
+        tech: ['React', 'Node.js', 'MongoDB', 'Stripe'],
+        image: 'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=800&h=600&fit=crop&crop=center',
+        githubUrl: 'https://github.com/hemanthscode/ecommerce-platform',
+        live: '#',
+        category: ProjectCategory.Web,
+        featured: true,
+      },
+      {
+        id: 2,
+        title: 'AI Chat Assistant',
+        description: 'Intelligent chatbot with natural language processing and machine learning',
+        tech: ['Python', 'TensorFlow', 'React', 'FastAPI'],
+        image: 'https://images.unsplash.com/photo-1677442136019-21780ecad995?w=800&h=600&fit=crop&crop=center',
+        githubUrl: 'https://github.com/hemanthscode/ai-chat-assistant',
+        live: '#',
+        category: ProjectCategory.AI,
+        featured: true,
+      },
+      {
+        id: 3,
+        title: 'Mobile Banking App',
+        description: 'Secure mobile banking application with biometric authentication',
+        tech: ['React Native', 'Firebase', 'Node.js'],
+        image: 'https://images.unsplash.com/photo-1563013544-824ae1b704d3?w=800&h=600&fit=crop&crop=center',
+        githubUrl: 'https://github.com/hemanthscode/mobile-banking-app',
+        live: '#',
+        category: ProjectCategory.Mobile,
+        featured: false,
+      },
+      {
+        id: 4,
+        title: 'Data Visualization Dashboard',
+        description: 'Interactive dashboard for real-time data analysis and reporting',
+        tech: ['D3.js', 'React', 'Python', 'PostgreSQL'],
+        image: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&h=600&fit=crop&crop=center',
+        githubUrl: 'https://github.com/hemanthscode/data-viz-dashboard',
+        live: '#',
+        category: ProjectCategory.Data,
+        featured: false,
+      },
+      {
+        id: 5,
+        title: 'Portfolio Website',
+        description: 'Responsive portfolio website with modern animations and interactions',
+        tech: ['Next.js', 'Framer Motion', 'Tailwind'],
+        image: 'https://images.unsplash.com/photo-1467232004584-a241de8bcf5d?w=800&h=600&fit=crop&crop=center',
+        githubUrl: 'https://github.com/hemanthscode/portfolio-website',
+        live: '#',
+        category: ProjectCategory.Web,
+        featured: false,
+      },
+      {
+        id: 6,
+        title: 'IoT Monitoring System',
+        description: 'Real-time IoT device monitoring and control system',
+        tech: ['React', 'MQTT', 'InfluxDB', 'Grafana'],
+        image: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&h=600&fit=crop&crop=center',
+        githubUrl: 'https://github.com/hemanthscode/iot-monitoring-system',
+        live: '#',
+        category: ProjectCategory.IoT,
+        featured: true,
+      },
+    ],
+    footerText: 'Crafted with ❤️ using React, Tailwind CSS, and Framer Motion',
+  },
+  contact: {
+    title: 'Get in Touch',
+    description: 'Interested in working together? Send me a message or request my resume.',
+    email: 'hemanths7.dev@gmail.com',
+  },
+  footer: {
+    githubUrl: 'https://github.com/hemanthscode',
+    linkedinUrl: 'https://www.linkedin.com/in/hemanthcodes/',
+    copyright: `© ${new Date().getFullYear()} Hemanth Sayimpu. All rights reserved.`,
+  },
+  navItems: [
+    { label: 'About', href: '/about' },
+    { label: 'Work', href: '/work' },
+    { label: 'Contact', href: '/contact' },
   ],
-};
-
-export const defaultFooterProps: FooterProps = {
-  githubUrl: 'https://github.com/hemanthscode',
-  linkedinUrl: 'https://www.linkedin.com/in/hemanthcodes/',
-  copyright: `© ${new Date().getFullYear()} Your Name. All rights reserved.`,
-};
+}));

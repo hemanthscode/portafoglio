@@ -1,8 +1,24 @@
-/**
- * Utility function to validate URLs.
- * @param {string | undefined} url - URL to validate.
- * @returns {boolean} True if valid, false otherwise.
- */
+import type { LucideIcon } from 'lucide-react';
+import { Globe, Smartphone, Cpu, Database, Code, Palette } from 'lucide-react';
+import { ProjectCategory } from './types';
+
+export const getCategoryIcon = (category: ProjectCategory): LucideIcon => {
+  switch (category) {
+    case ProjectCategory.Web:
+      return Globe;
+    case ProjectCategory.Mobile:
+      return Smartphone;
+    case ProjectCategory.AI:
+      return Cpu;
+    case ProjectCategory.Data:
+      return Database;
+    case ProjectCategory.IoT:
+      return Code;
+    case ProjectCategory.Other:
+      return Palette;
+  }
+};
+
 export const isValidUrl = (url: string | undefined): boolean => {
   if (!url) return false;
   try {
@@ -13,10 +29,7 @@ export const isValidUrl = (url: string | undefined): boolean => {
   }
 };
 
-/**
- * Locks scroll on the page.
- */
-export const lockScroll = () => {
+export const lockScroll = (): void => {
   const scrollY = window.scrollY;
   document.documentElement.classList.add('no-scroll');
   document.body.style.position = 'fixed';
@@ -24,10 +37,7 @@ export const lockScroll = () => {
   document.body.style.width = '100%';
 };
 
-/**
- * Unlocks scroll on the page.
- */
-export const unlockScroll = () => {
+export const unlockScroll = (): void => {
   const scrollY = document.body.style.top;
   document.documentElement.classList.remove('no-scroll');
   document.body.style.position = '';
@@ -38,9 +48,6 @@ export const unlockScroll = () => {
   }
 };
 
-/**
- * Scrolls to the top of the page smoothly.
- */
-export const scrollToTop = () => {
+export const scrollToTop = (): void => {
   window.scrollTo({ top: 0, behavior: 'smooth' });
 };

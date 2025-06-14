@@ -1,24 +1,28 @@
 import { memo } from 'react';
 import type { TypographyProps } from '@/utils/types';
+import { TypographyVariant } from '@/utils/types';
 
-/**
- * Reusable typography component with responsive font sizes and accessibility.
- * @param {TypographyProps} props - Component props.
- */
-const Typography = ({ children, variant = 'p', className = '', id }: TypographyProps) => {
-  const Tag = variant === 'h1' ? 'h1' : variant === 'h2' ? 'h2' : variant === 'h3' ? 'h3' : variant === 'span' ? 'span' : 'p';
-  const baseStyles = {
-    h1: 'text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-text tracking-tight',
-    h2: 'text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-text',
-    h3: 'text-lg sm:text-xl md:text-2xl font-semibold text-text',
-    p: 'text-sm sm:text-base md:text-lg text-accent leading-relaxed',
-    span: 'text-xs sm:text-sm md:text-base text-accent',
-  };
+const variantMap: Record<TypographyVariant, string> = {
+  h1: 'h1 text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight',
+  h2: 'h2 text-3xl sm:text-4xl font-bold tracking-tight',
+  h3: 'h3 text-2xl sm:text-3xl font-semibold tracking-tight',
+  p: 'p text-base sm:text-lg leading-relaxed',
+  span: 'span text-base',
+};
+
+const Typography = ({
+  children,
+  variant = TypographyVariant.P,
+  className = '',
+  id,
+}: TypographyProps) => {
+  const Component = variantMap[variant].split(' ')[0] as keyof JSX.IntrinsicElements;
+  const styles = variantMap[variant].replace(Component, '').trim();
 
   return (
-    <Tag className={`${baseStyles[variant]} ${className}`} id={id}>
+    <Component id={id} className={`${styles} text-text ${className}`}>
       {children}
-    </Tag>
+    </Component>
   );
 };
 

@@ -1,83 +1,185 @@
+import { memo } from 'react';
 import { motion } from 'framer-motion';
-import { memo, useMemo } from 'react';
+import { usePortfolioStore } from '@/utils/config';
 import Button from '@/components/atoms/Button';
+import Icon from '@/components/atoms/Icon';
 import Typography from '@/components/atoms/Typography';
-import { Github } from 'lucide-react';
-import { containerVariants, itemVariants } from '@/utils/animations';
+import { ArrowRight, Code } from 'lucide-react';
+import { cardVariants, containerVariants } from '@/utils/animations';
 import { containerPadding } from '@/utils/styles';
-import type { AboutProps } from '@/utils/types';
+import { CardType, TypographyVariant, Variant, Size } from '@/utils/types';
 
-/**
- * Responsive About section component for personal information and skills.
- * @param {AboutProps} props - Component props.
- */
-const About = ({
-  title = 'About Me',
-  description = 'I’m a passionate web developer and Python enthusiast with a knack for building responsive, user-friendly applications and efficient backend solutions.',
-  skills = ['React', 'TypeScript', 'Tailwind CSS', 'Python', 'Django', 'FastAPI'],
-  githubUrl = 'https://github.com',
-}: Partial<AboutProps>) => {
-  const validatedProps: AboutProps = {
-    title,
-    description,
-    skills,
-    githubUrl,
-  };
+const About = () => {
+  const { about } = usePortfolioStore();
 
-  const memoizedSkills = useMemo(() => validatedProps.skills, [validatedProps.skills]);
+  // Filter tech and career-related cards
+  const heroCard = about.cards?.find(card => card.type === CardType.Hero);
+  const storyCards = about.cards?.filter(card => 
+    card.type === CardType.Story && ['The Spark', 'Team Player'].includes(card.title)
+  ) || [];
+  const skillCards = about.cards?.filter(card => card.type === CardType.Skill) || [];
 
   return (
-    <section
-      className={`min-h-[calc(100vh-4rem)] w-full flex items-center justify-center section-gradient ${containerPadding} py-8 sm:py-12 lg:py-16`}
+    <motion.section
+      className={`py-12 sm:py-16 lg:py-20 bg-background ${containerPadding}`}
+      variants={containerVariants}
+      initial="hidden"
+      animate="visible"
       role="region"
       aria-labelledby="about-title"
     >
-      <motion.div
-        className="text-center max-w-md sm:max-w-lg md:max-w-2xl lg:max-w-3xl mx-auto space-y-4 sm:space-y-6 lg:space-y-8"
-        variants={containerVariants}
-        initial="hidden"
-        animate="visible"
-      >
-        <Typography variant="h2" id="about-title" className="mb-4 sm:mb-6">
-          {validatedProps.title}
-        </Typography>
-        <motion.div variants={itemVariants}>
-          <Typography variant="p" className="max-w-md sm:max-w-lg md:max-w-xl mx-auto">
-            {validatedProps.description}
+      <div className="max-w-4xl mx-auto">
+        {/* Header */}
+        <motion.div
+          className="text-center mb-10 sm:mb-12"
+          variants={cardVariants}
+        >
+          <div className="inline-flex items-center px-4 py-2 rounded-full bg-primary text-white text-sm sm:text-base font-medium mb-4">
+            <Icon icon={Code} className="w-5 h-5 mr-2" aria-hidden="true" />
+            <Typography variant={TypographyVariant.Span}>
+              {about.title || 'My Tech Journey'}
+            </Typography>
+          </div>
+          <Typography
+            variant={TypographyVariant.H2}
+            id="about-title"
+            className="text-2xl sm:text-3xl lg:text-4xl font-bold text-text"
+          >
+            Engineering Digital
+            <span className="text-primary"> Solutions</span>
+          </Typography>
+          <Typography
+            variant={TypographyVariant.P}
+            className="text-accent mt-2 max-w-2xl mx-auto text-base sm:text-lg"
+          >
+            {about.description || 'Building cutting-edge web applications with expertise and innovation.'}
           </Typography>
         </motion.div>
-        <motion.div className="flex flex-wrap justify-center gap-1 sm:gap-2 lg:gap-3" variants={itemVariants}>
-          {memoizedSkills.length > 0 ? (
-            memoizedSkills.map((skill) => (
-              <span
-                key={skill}
-                className="px-2 py-1 sm:px-3 sm:py-1.5 lg:px-4 lg:py-2 bg-gray-100 text-accent text-xs sm:text-sm lg:text-base rounded-full hover:bg-gray-200 transition-colors duration-200"
+
+        {/* Stacked Cards */}
+        <div className="space-y-6">
+          {/* Hero Card */}
+          {heroCard && (
+            <motion.div
+              className="bg-white p-6 sm:p-8 rounded-2xl border border-gray-200 shadow-md"
+              variants={cardVariants}
+              role="article"
+              aria-labelledby={`hero-${heroCard.id}`}
+            >
+              <Icon
+                icon={heroCard.icon || Code}
+                className="w-8 h-8 text-primary mb-4"
+                aria-hidden="true"
+              />
+              <Typography
+                variant={TypographyVariant.H3}
+                className="text-xl sm:text-2xl font-bold text-text"
+                id={`hero-${heroCard.id}`}
               >
-                {skill}
-              </span>
-            ))
-          ) : (
-            <Typography variant="span" className="text-accent">
-              No skills listed
-            </Typography>
+                {heroCard.title || 'Hemanth Sayimpu'}
+              </Typography>
+              <Typography
+                variant={TypographyVariant.P}
+                className="text-sm sm:text-base text-accent mb-4"
+              >
+                {heroCard.subtitle || 'Full-Stack Developer'}
+              </Typography>
+              <Typography
+                variant={TypographyVariant.P}
+                className="text-base sm:text-lg text-gray-700"
+              >
+                {heroCard.content || 'Specializing in scalable, user-focused web solutions.'}
+              </Typography>
+            </motion.div>
           )}
-        </motion.div>
-        <motion.div variants={itemVariants}>
+
+          {/* Skills Grid */}
+          {skillCards.length > 0 && (
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {skillCards.map((skill) => (
+                <motion.div
+                  key={skill.id}
+                  className="bg-gray-50 p-4 sm:p-6 rounded-xl border border-gray-200"
+                  variants={cardVariants}
+                  role="article"
+                  aria-labelledby={`skill-${skill.id}`}
+                >
+                  <Icon
+                    icon={skill.icon || Code}
+                    className="w-6 h-6 text-primary mb-3"
+                    aria-hidden="true"
+                  />
+                  <Typography
+                    variant={TypographyVariant.H3}
+                    className="text-base sm:text-lg font-semibold"
+                    id={`skill-${skill.id}`}
+                  >
+                    {skill.title || 'Skill'}
+                  </Typography>
+                  <Typography
+                    variant={TypographyVariant.P}
+                    className="text-sm text-accent"
+                  >
+                    {skill.content || 'Mastering modern technologies.'}
+                  </Typography>
+                </motion.div>
+              ))}
+            </div>
+          )}
+
+          {/* Story Cards */}
+          {storyCards.map((story) => (
+            <motion.div
+              key={story.id}
+              className="bg-white p-6 sm:p-8 rounded-2xl border border-gray-200 shadow-md"
+              variants={cardVariants}
+              role="article"
+              aria-labelledby={`story-${story.id}`}
+            >
+              <div className="flex items-start space-x-4">
+                <Icon
+                  icon={story.icon || Code}
+                  className="w-6 h-6 text-yellow-600 flex-shrink-0"
+                  aria-hidden="true"
+                />
+                <div>
+                  <Typography
+                    variant={TypographyVariant.H3}
+                    className="text-base sm:text-lg font-semibold"
+                    id={`story-${story.id}`}
+                  >
+                    {story.title || 'The Spark'}
+                  </Typography>
+                  <Typography
+                    variant={TypographyVariant.P}
+                    className="text-sm sm:text-base text-gray-700"
+                  >
+                    {story.content || 'A tech journey sparked by curiosity.'}
+                  </Typography>
+                </div>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+
+        {/* CTA */}
+        <motion.div
+          className="text-center mt-10 sm:mt-12"
+          variants={cardVariants}
+        >
           <Button
-            href={validatedProps.githubUrl}
-            variant="primary"
-            size="md"
-            ariaLabel="Visit my GitHub profile"
-            className="group w-full sm:w-auto"
+            to={about.cta?.buttonLink || '/contact'}
+            variant={Variant.Primary}
+            size={Size.Large}
+            ariaLabel="Connect with me"
+            className="w-full sm:w-auto px-6 sm:px-8 py-3"
           >
-            <span className="flex items-center gap-1 sm:gap-2 lg:gap-3">
-              <Github className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6 group-hover:rotate-12 transition-transform" aria-hidden="true" />
-              View GitHub
-            </span>
+            {about.cta?.buttonText || 'Let’s Connect'}
+            <Icon icon={ArrowRight} className="ml-2 w-5 h-5" aria-hidden="true" />
           </Button>
         </motion.div>
-      </motion.div>
-    </section>
+      </div>
+    </motion.section>
   );
 };
 

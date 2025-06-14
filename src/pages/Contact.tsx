@@ -1,18 +1,12 @@
 import { memo } from 'react';
-import ContactSection from '@/components/organisms/Contact';
-import { defaultContactProps } from '@/utils/config';
-import type { ContactProps } from '@/utils/types';
+import Contact from '@/components/organisms/Contact';
 
-/**
- * Responsive Contact page component rendering the Contact section.
- * @param {ContactProps} props - Component props.
- */
-const Contact = (props: ContactProps) => {
+const ContactPage = () => {
   return (
     <div className="flex flex-col w-full min-h-[calc(100vh-4rem)]">
-      <ContactSection {...defaultContactProps} {...props} />
+      <Contact />
     </div>
   );
 };
 
-export default memo(Contact);
+export default memo(ContactPage);

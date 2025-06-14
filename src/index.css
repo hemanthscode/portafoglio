@@ -26,3 +26,20 @@
     @apply bg-gradient-to-br from-blue-50 via-background to-purple-50;
   }
 }
+
+@layer components {
+  .card-base {
+    @apply bg-white rounded-2xl border border-gray-200 shadow-sm hover:shadow-xl transition-all duration-300;
+  }
+  .button-base {
+    @apply inline-flex items-center justify-center font-medium rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+    transition: none !important;
+    transform: none !important;
+  }
+}

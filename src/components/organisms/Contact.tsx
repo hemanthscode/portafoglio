@@ -1,65 +1,93 @@
-import { motion } from 'framer-motion';
 import { memo } from 'react';
-import { Link } from 'react-router-dom';
+import { usePortfolioStore } from '@/utils/config';
+import Button from '@/components/atoms/Button';
+import Icon from '@/components/atoms/Icon';
 import Typography from '@/components/atoms/Typography';
-import { Mail, FileText } from 'lucide-react';
-import { containerVariants, itemVariants } from '@/utils/animations';
+import { Mail, MapPin, Github } from 'lucide-react';
 import { containerPadding } from '@/utils/styles';
-import type { ContactProps } from '@/utils/types';
+import { TypographyVariant, Variant, Size } from '@/utils/types';
 
-/**
- * Responsive Contact section component for contact information and actions.
- * @param {ContactProps} props - Component props.
- */
-const Contact = ({
-  title = 'Get in Touch',
-  description = 'Interested in working together? Send me a message or request my resume.',
-  email = 'your.email@example.com',
-}: Partial<ContactProps>) => {
-  const validatedProps: ContactProps = { title, description, email };
+const Contact = () => {
+  const { contact } = usePortfolioStore();
 
   return (
     <section
-      className={`min-h-[calc(100vh-4rem)] w-full flex items-center justify-center section-gradient ${containerPadding} py-8 sm:py-12 lg:py-16`}
+      className={`py-16 bg-background ${containerPadding}`}
       role="region"
       aria-labelledby="contact-title"
     >
-      <motion.div
-        className="text-center max-w-md sm:max-w-lg md:max-w-2xl lg:max-w-3xl mx-auto space-y-4 sm:space-y-6 lg:space-y-8"
-        variants={containerVariants}
-        initial="hidden"
-        animate="visible"
-      >
-        <Typography variant="h2" id="contact-title" className="mb-4 sm:mb-6">
-          {validatedProps.title}
-        </Typography>
-        <motion.div variants={itemVariants}>
-          <Typography variant="p" className="max-w-md sm:max-w-lg md:max-w-xl mx-auto">
-            {validatedProps.description}
+      <div className="max-w-4xl mx-auto text-center">
+        {/* Header */}
+        <div className="mb-12">
+          <Typography
+            variant={TypographyVariant.H2}
+            id="contact-title"
+            className="text-4xl font-bold mb-4"
+          >
+            Get In Touch
           </Typography>
-        </motion.div>
-        <motion.div
-          className="flex flex-col sm:flex-row gap-2 sm:gap-4 max-w-md mx-auto"
-          variants={itemVariants}
-        >
-          <a
-            href={`mailto:${validatedProps.email}`}
-            className="inline-flex items-center justify-center px-4 py-2 sm:px-6 sm:py-3 bg-primary text-white font-medium rounded-lg hover:bg-primary-dark transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 w-full sm:w-auto min-h-[44px]"
-            aria-label="Send me an email"
+          <Typography 
+            variant={TypographyVariant.P} 
+            className="text-lg text-accent max-w-2xl mx-auto"
           >
-            <Mail className="w-4 h-4 sm:w-5 sm:h-5 mr-1 sm:mr-2" aria-hidden="true" />
+            {contact.description || "Let's work together to create something amazing. I'm always open to discussing new opportunities."}
+          </Typography>
+        </div>
+
+        {/* Contact Info */}
+        <div className="grid md:grid-cols-2 gap-6 mb-12">
+          <div className="bg-gray-50 p-6 rounded-xl">
+            <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <Icon icon={Mail} className="w-6 h-6 text-blue-600" />
+            </div>
+            <Typography variant={TypographyVariant.H3} className="font-semibold mb-2">
+              Email Me
+            </Typography>
+            <Typography variant={TypographyVariant.P} className="text-accent">
+              {contact.email || "your.email@example.com"}
+            </Typography>
+          </div>
+
+          <div className="bg-gray-50 p-6 rounded-xl">
+            <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <Icon icon={MapPin} className="w-6 h-6 text-green-600" />
+            </div>
+            <Typography variant={TypographyVariant.H3} className="font-semibold mb-2">
+              Location
+            </Typography>
+            <Typography variant={TypographyVariant.P} className="text-accent">
+              Guntur, Andhra Pradesh, IN
+            </Typography>
+          </div>
+        </div>
+
+        {/* Action Buttons */}
+        <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <Button
+            href={`mailto:${contact.email}`}
+            variant={Variant.Primary}
+            size={Size.Medium}
+            ariaLabel="Send email"
+            className="px-8"
+          >
+            <Icon icon={Mail} className="mr-2 w-5 h-5" />
             Send Email
-          </a>
-          <Link
-            to="/contact"
-            className="inline-flex items-center justify-center px-4 py-2 sm:px-6 sm:py-3 border-2 border-accent text-text font-medium rounded-lg hover:bg-gray-100 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 w-full sm:w-auto min-h-[44px]"
-            aria-label="Request my resume"
+          </Button>
+          
+          <Button
+            href="https://github.com/hemanthscode"
+            variant={Variant.Outline}
+            size={Size.Medium}
+            ariaLabel="View GitHub profile"
+            className="px-8"
+            target="_blank"
+            rel="noopener noreferrer"
           >
-            <FileText className="w-4 h-4 sm:w-5 sm:h-5 mr-1 sm:mr-2" aria-hidden="true" />
-            Request Resume
-          </Link>
-        </motion.div>
-      </motion.div>
+            <Icon icon={Github} className="mr-2 w-5 h-5" />
+            GitHub
+          </Button>
+        </div>
+      </div>
     </section>
   );
 };

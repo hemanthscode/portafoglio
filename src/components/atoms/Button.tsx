@@ -1,66 +1,65 @@
 import { motion } from 'framer-motion';
-import { memo } from 'react';
+import { memo, type ComponentType } from 'react';
 import { Link } from 'react-router-dom';
 import { isValidUrl } from '@/utils/helpers';
 import { buttonVariants } from '@/utils/animations';
-import type { ButtonProps } from '@/utils/types';
+import { buttonStyles } from '@/utils/styles';
+import { Size, type ButtonProps, Variant } from '@/utils/types';
+import type { MotionProps } from 'framer-motion';
 
-/**
- * Reusable button component with responsive variants, sizes, and accessibility.
- * @param {ButtonProps} props - Component props.
- */
 const Button = ({
   children,
   href,
-  variant = 'primary',
-  size = 'md',
+  to,
+  variant = Variant.Primary,
+  size = Size.Medium,
   className = '',
   ariaLabel,
   as: ComponentOverride,
-  to,
   disabled = false,
   onClick,
 }: ButtonProps) => {
-  const baseStyles =
-    'inline-flex items-center justify-center font-medium rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed w-full sm:w-auto';
+  const baseStyles = `${buttonStyles.base} transition-colors duration-200 focus:ring-primary disabled:opacity-50 disabled:cursor-not-allowed w-full sm:w-auto`;
   const variantStyles = {
-    primary: 'bg-primary text-white hover:bg-primary-dark focus:ring-primary',
-    secondary: 'bg-secondary text-white hover:bg-secondary-dark focus:ring-secondary',
-    outline: 'border-2 border-primary text-primary hover:bg-primary hover:text-white focus:ring-primary',
+    primary: 'bg-primary text-white hover:bg-primary-dark',
+    secondary: 'bg-secondary text-white hover:bg-secondary-dark',
+    outline: 'border-2 border-primary text-primary hover:bg-primary hover:text-white',
   };
   const sizeStyles = {
-    sm: 'px-2 py-1 text-xs sm:px-3 sm:py-1.5 sm:text-sm',
-    md: 'px-3 py-1.5 text-sm sm:px-4 sm:py-2 sm:text-base',
-    lg: 'px-4 py-2 text-base sm:px-6 sm:py-3 sm:text-lg',
+    sm: 'px-2 py-1 text-xs sm:px-3 sm:py-1.5 sm:text-sm touch-action-manipulation',
+    md: 'px-3 py-1.5 text-sm sm:px-4 sm:py-2 sm:text-base touch-action-manipulation',
+    lg: 'px-4 py-2 text-base sm:px-6 sm:py-3 sm:text-lg touch-action-manipulation',
   };
 
   const Component = ComponentOverride
-    ? motion.create(ComponentOverride)
+    ? motion<ComponentType<any>>(ComponentOverride as any)
     : to
-    ? motion.create(Link)
+    ? motion(Link)
     : href && isValidUrl(href)
-    ? motion.create('a')
-    : motion.create('button');
+    ? motion.a
+    : motion.button;
 
-  const props = href
-    ? { href, target: '_blank', rel: 'noopener noreferrer', role: 'link' }
-    : to
-    ? { to }
-    : { type: 'button' as const, onClick };
+  const props: MotionProps & {
+    href?: string;
+    to?: string;
+    type?: 'button';
+    onClick?: () => void;
+    disabled?: boolean;
+    className: string;
+    'aria-label'?: string;
+  } = {
+    ...(href ? { href, target: '_blank', rel: 'noopener noreferrer' } : {}),
+    ...(to ? { to } : {}),
+    ...(!href && !to ? { type: 'button', onClick } : {}),
+    disabled,
+    className: `${baseStyles} ${variantStyles[variant]} ${sizeStyles[size]} ${className}`,
+    'aria-label': ariaLabel || (typeof children === 'string' ? children : undefined),
+    variants: buttonVariants,
+    whileHover: disabled ? undefined : 'hover',
+    whileTap: disabled ? undefined : 'tap',
+  };
 
-  return (
-    <Component
-      className={`${baseStyles} ${variantStyles[variant]} ${sizeStyles[size]} ${className}`}
-      aria-label={ariaLabel}
-      variants={buttonVariants}
-      whileHover={disabled ? undefined : 'hover'}
-      whileTap={disabled ? undefined : 'tap'}
-      disabled={disabled}
-      {...props}
-    >
-      {children}
-    </Component>
-  );
+  return <Component {...props}>{children}</Component>;
 };
 
 export default memo(Button);

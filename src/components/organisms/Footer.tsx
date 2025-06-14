@@ -1,22 +1,15 @@
-import { motion } from 'framer-motion';
 import { memo } from 'react';
+import { motion } from 'framer-motion';
+import { usePortfolioStore } from '@/utils/config';
 import SocialLink from '@/components/molecules/SocialLink';
 import Typography from '@/components/atoms/Typography';
 import { Github, Linkedin } from 'lucide-react';
 import { containerVariants } from '@/utils/animations';
 import { containerPadding } from '@/utils/styles';
-import type { FooterProps } from '@/utils/types';
+import { TypographyVariant } from '@/utils/types';
 
-/**
- * Responsive Footer component for social links and copyright.
- * @param {FooterProps} props - Component props.
- */
-const Footer = ({
-  githubUrl = 'https://github.com',
-  linkedinUrl = 'https://linkedin.com',
-  copyright = `© ${new Date().getFullYear()} Your Name. All rights reserved.`,
-}: Partial<FooterProps>) => {
-  const validatedProps: FooterProps = { githubUrl, linkedinUrl, copyright };
+const Footer = () => {
+  const { footer } = usePortfolioStore();
 
   return (
     <footer
@@ -32,18 +25,21 @@ const Footer = ({
       >
         <div className="flex justify-center gap-3 sm:gap-4 lg:gap-6 mb-2 sm:mb-4">
           <SocialLink
-            href={validatedProps.githubUrl}
+            href={footer.githubUrl}
             icon={Github}
             ariaLabel="Visit my GitHub profile"
           />
           <SocialLink
-            href={validatedProps.linkedinUrl}
+            href={footer.linkedinUrl}
             icon={Linkedin}
             ariaLabel="Visit my LinkedIn profile"
           />
         </div>
-        <Typography variant="span" className="text-xs sm:text-sm lg:text-base">
-          {validatedProps.copyright}
+        <Typography
+          variant={TypographyVariant.Span}
+          className="text-xs sm:text-sm lg:text-base"
+        >
+          {footer.copyright}
         </Typography>
       </motion.div>
     </footer>
