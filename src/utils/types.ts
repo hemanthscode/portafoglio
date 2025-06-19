@@ -1,5 +1,5 @@
 import type { LucideIcon } from 'lucide-react';
-import type { ReactNode, ComponentType } from 'react';
+import type { ReactNode, ComponentType, ReactElement } from 'react';
 
 export enum Variant {
   Primary = 'primary',
@@ -49,8 +49,8 @@ export interface ButtonProps {
   variant?: Variant;
   size?: Size;
   className?: string;
-  ariaLabel?: string;
-  as?: ComponentType<any>;
+  ariaLabel: string;
+  as?: ComponentType<React.HTMLProps<HTMLElement>>;
   disabled?: boolean;
   loading?: boolean;
   onClick?: () => void;
@@ -63,7 +63,7 @@ export interface IconProps {
   icon: LucideIcon;
   className?: string;
   ariaHidden?: boolean;
-  'aria-label'?: string;
+  ariaLabel?: string;
 }
 
 export interface TypographyProps {
@@ -72,16 +72,14 @@ export interface TypographyProps {
   className?: string;
   id?: string;
   role?: string;
-  textColor?: string;
 }
 
 export interface LazyImageProps {
   src: string;
   alt: string;
   className?: string;
-  width?: number;
-  height?: number;
-  loading?: 'lazy' | 'eager';
+  sizes?: string;
+  placeholder?: string;
 }
 
 export interface Project {
@@ -91,17 +89,15 @@ export interface Project {
   tech: string[];
   image: string;
   githubUrl: string;
-  live: string;
+  mediumPostUrl: string;
+  projectPageUrl: string;
   category: ProjectCategory;
-  featured: boolean;
   details: {
     overview: string;
     challenges: string[];
     solutions: string[];
     impact: string;
   };
-  projectPageUrl?: string;
-  mediumPostUrl?: string;
 }
 
 export interface ProjectCardProps {
@@ -163,7 +159,7 @@ export interface HeroProps {
   subheadline: string;
   githubUrl: string;
   ctaText: string;
-  logo: ReactNode;
+  logo: ReactElement;
   ctaLink: string;
 }
 

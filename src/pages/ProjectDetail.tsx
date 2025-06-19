@@ -1,47 +1,30 @@
-import { memo, useMemo } from 'react';
+import { memo } from 'react';
 import { motion } from 'framer-motion';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { usePortfolioStore } from '@/utils/config';
 import Button from '@/components/atoms/Button';
-import Icon from '@/components/atoms/Icon';
 import LazyImage from '@/components/atoms/LazyImage';
 import Typography from '@/components/atoms/Typography';
-import { ArrowLeft, Github, Globe } from 'lucide-react';
-import { getCategoryIcon, isValidUrl } from '@/utils/helpers';
-import { containerVariants, itemVariants } from '@/utils/animations';
-import { containerPadding, cardStyles } from '@/utils/styles';
+import { containerVariants } from '@/utils/animations';
+import { projectDetailStyles } from '@/utils/styles';
 import { Helmet } from 'react-helmet-async';
+import { Github, Book, ExternalLink } from 'lucide-react';
+import { isValidUrl } from '@/utils/helpers';
 import { TypographyVariant, Variant, Size } from '@/utils/types';
+import clsx from 'clsx';
 
 const ProjectDetail = () => {
   const { id } = useParams<{ id: string }>();
-  const navigate = useNavigate();
   const { work } = usePortfolioStore();
-
-  const project = useMemo(
-    () => work.projects.find((p) => p.id === parseInt(id || '')),
-    [id, work.projects]
-  );
+  const project = work.projects.find((p) => p.id === parseInt(id || '0'));
 
   if (!project) {
     return (
-      <motion.div
-        className={`min-h-screen bg-background py-8 ${containerPadding}`}
-        variants={containerVariants}
-        initial="hidden"
-        animate="visible"
-        role="main"
-        aria-labelledby="error-title"
-      >
-        <Typography
-          variant={TypographyVariant.H2}
-          id="error-title"
-          className="text-center text-text"
-          role="alert"
-        >
-          Project not found
+      <div className="flex justify-center items-center h-screen">
+        <Typography variant={TypographyVariant.H2} className={projectDetailStyles.errorTitle}>
+          Project Not Found
         </Typography>
-      </motion.div>
+      </div>
     );
   }
 
@@ -54,96 +37,120 @@ const ProjectDetail = () => {
         <meta property="og:title" content={`${project.title} | Hemanth Sayimpu`} />
         <meta property="og:description" content={project.description} />
         <meta property="og:type" content="website" />
-        <meta
-          property="og:url"
-          content={`https://your-portfolio-url.com/project/${project.id}`}
-        />
+        <meta property="og:url" content={`https://hemanth.codes${project.projectPageUrl}`} />
         <meta property="og:image" content={project.image} />
       </Helmet>
       <motion.div
-        className={`min-h-screen bg-background py-8 ${containerPadding}`}
+        className={clsx(projectDetailStyles.base, 'bg-background')}
         variants={containerVariants}
         initial="hidden"
         animate="visible"
         role="main"
-        aria-labelledby={`project-title-${project.id}`}
+        aria-labelledby="project-title"
       >
-        <div className="max-w-4xl mx-auto">
-          <motion.div className="mb-6" variants={itemVariants}>
-            <Button
-              to="/work"
-              variant={Variant.Outline}
-              size={Size.Medium}
-              ariaLabel="Back to projects"
-              className="flex items-center"
-              onClick={() => navigate(-1)}
-            >
-              <Icon icon={ArrowLeft} className="mr-2 w-5 h-5" aria-hidden="true" />
-              Back to Projects
-            </Button>
-          </motion.div>
-
-          <motion.div className={`${cardStyles.detail}`} variants={itemVariants}>
-            {project.image && (
-              <LazyImage
-                src={project.image}
-                alt={`${project.title} preview`}
-                className="w-full h-48 sm:h-64 lg:h-80 object-cover rounded-t-xl mb-6"
-              />
-            )}
-            <div className="p-6 sm:p-8">
-              <div className="flex items-center gap-2 mb-4">
-                <Icon
-                  icon={getCategoryIcon(project.category)}
-                  className="w-5 h-5 text-primary"
-                  aria-hidden="true"
-                />
-                <Typography
-                  variant={TypographyVariant.Span}
-                  className="text-xs font-medium text-gray-600 uppercase"
-                >
-                  {project.category}
+        <div className={projectDetailStyles.container}>
+          <Button
+            to="/work"
+            variant={Variant.Outline}
+            size={Size.Medium}
+            className={projectDetailStyles.backButtonStyle}
+            ariaLabel="Back to projects"
+          >
+            Back to Projects
+          </Button>
+          <div className={projectDetailStyles.card}>
+            <LazyImage
+              src={project.image}
+              alt={`${project.title} preview`}
+              className={projectDetailStyles.image}
+              sizes="(max-width: 640px) 100vw, 800px"
+            />
+            <div className={projectDetailStyles.cardContent}>
+              <div className={projectDetailStyles.category}>
+                <Typography variant={TypographyVariant.Span}>
+                  {project.category.toUpperCase()}
                 </Typography>
               </div>
               <Typography
                 variant={TypographyVariant.H1}
-                id={`project-title-${project.id}`}
-                className="text-2xl sm:text-3xl lg:text-4xl font-bold text-text mb-4"
+                id="project-title"
+                className={projectDetailStyles.title}
+                role="heading"
+                aria-level={1}
               >
                 {project.title}
               </Typography>
-              <Typography
-                variant={TypographyVariant.P}
-                className="text-base sm:text-lg text-accent mb-6"
-              >
+              <Typography variant={TypographyVariant.P} className={projectDetailStyles.description}>
                 {project.description}
               </Typography>
-
-              <div className="flex flex-wrap gap-2 mb-6">
+              <div className={projectDetailStyles.techTags}>
                 {project.tech.map((tech) => (
-                  <span
-                    key={tech}
-                    className="px-2 py-1 bg-gray-100 text-gray-700 rounded-lg text-xs font-medium"
-                  >
+                  <span key={tech} className={projectDetailStyles.techTags}>
                     {tech}
                   </span>
                 ))}
               </div>
-
-              <div className="flex flex-col sm:flex-row gap-4 mb-8">
-                {isValidUrl(project.live) && project.live !== '#' && (
-                  <Button
-                    href={project.live}
-                    variant={Variant.Primary}
-                    size={Size.Medium}
-                    ariaLabel={`View live demo of ${project.title}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
+              <motion.div className={projectDetailStyles.details} variants={containerVariants}>
+                <div>
+                  <Typography
+                    variant={TypographyVariant.H3}
+                    className={projectDetailStyles.sectionTitle}
                   >
-                    <Icon icon={Globe} className="mr-2 w-5 h-5" aria-hidden="true" />
-                    View Demo
-                  </Button>
-                )}
+                    Overview
+                  </Typography>
+                  <Typography
+                    variant={TypographyVariant.P}
+                    className={projectDetailStyles.sectionContent}
+                  >
+                    {project.details.overview}
+                  </Typography>
+                </div>
+                <div>
+                  <Typography
+                    variant={TypographyVariant.H3}
+                    className={projectDetailStyles.sectionTitle}
+                  >
+                    Challenges
+                  </Typography>
+                  <ul className={projectDetailStyles.list}>
+                    {project.details.challenges.map((challenge, index) => (
+                      <li key={index} className={projectDetailStyles.listItem}>
+                        <Typography variant={TypographyVariant.P}>{challenge}</Typography>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+                <div>
+                  <Typography
+                    variant={TypographyVariant.H3}
+                    className={projectDetailStyles.sectionTitle}
+                  >
+                    Solutions
+                  </Typography>
+                  <ul className={projectDetailStyles.list}>
+                    {project.details.solutions.map((solution, index) => (
+                      <li key={index} className={projectDetailStyles.listItem}>
+                        <Typography variant={TypographyVariant.P}>{solution}</Typography>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+                <div>
+                  <Typography
+                    variant={TypographyVariant.H3}
+                    className={projectDetailStyles.sectionTitle}
+                  >
+                    Impact
+                  </Typography>
+                  <Typography
+                    variant={TypographyVariant.P}
+                    className={projectDetailStyles.sectionContent}
+                  >
+                    {project.details.impact}
+                  </Typography>
+                </div>
+              </motion.div>
+              <div className="flex flex-wrap gap-4 mt-8">
                 {isValidUrl(project.githubUrl) && (
                   <Button
                     href={project.githubUrl}
@@ -152,75 +159,36 @@ const ProjectDetail = () => {
                     ariaLabel={`View ${project.title} code on GitHub`}
                     target="_blank"
                     rel="noopener noreferrer"
+                    icon={<Github className="w-5 h-5" />}
                   >
-                    <Icon icon={Github} className="mr-2 w-5 h-5" aria-hidden="true" />
-                    View Code
+                    Code
                   </Button>
                 )}
+                {isValidUrl(project.mediumPostUrl) && (
+                  <Button
+                    href={project.mediumPostUrl}
+                    variant={Variant.Outline}
+                    size={Size.Medium}
+                    ariaLabel={`Read Medium post about ${project.title}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    icon={<Book className="w-5 h-5" />}
+                  >
+                    Post
+                  </Button>
+                )}
+                <Button
+                  to="/work"
+                  variant={Variant.Primary}
+                  size={Size.Medium}
+                  ariaLabel="Back to projects"
+                  icon={<ExternalLink className="w-5 h-5" />}
+                >
+                  Back to Projects
+                </Button>
               </div>
-
-              {project.details && (
-                <div className="space-y-6">
-                  <div>
-                    <Typography
-                      variant={TypographyVariant.H2}
-                      className="text-xl sm:text-2xl font-semibold mb-2"
-                    >
-                      Overview
-                    </Typography>
-                    <Typography variant={TypographyVariant.P}>
-                      {project.details.overview}
-                    </Typography>
-                  </div>
-                  <div>
-                    <Typography
-                      variant={TypographyVariant.H2}
-                      className="text-xl sm:text-2xl font-semibold mb-2"
-                    >
-                      Challenges
-                    </Typography>
-                    <ul className="list-disc list-inside space-y-1">
-                      {project.details.challenges.map((challenge, index) => (
-                        <li key={index}>
-                          <Typography variant={TypographyVariant.P} className="inline">
-                            {challenge}
-                          </Typography>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                  <div>
-                    <Typography
-                      variant={TypographyVariant.H2}
-                      className="text-xl sm:text-2xl font-semibold mb-2"
-                    >
-                      Solutions
-                    </Typography>
-                    <ul className="list-disc list-inside space-y-1">
-                      {project.details.solutions.map((solution, index) => (
-                        <li key={index}>
-                          <Typography variant={TypographyVariant.P} className="inline">
-                            {solution}
-                          </Typography>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                  <div>
-                    <Typography
-                      variant={TypographyVariant.H2}
-                      className="text-xl sm:text-2xl font-semibold mb-2"
-                    >
-                      Impact
-                    </Typography>
-                    <Typography variant={TypographyVariant.P}>
-                      {project.details.impact}
-                    </Typography>
-                  </div>
-                </div>
-              )}
             </div>
-          </motion.div>
+          </div>
         </div>
       </motion.div>
     </>
@@ -228,14 +196,3 @@ const ProjectDetail = () => {
 };
 
 export default memo(ProjectDetail);
-
-/* Changes and Best Practices:
-- Created to display project details based on Project type’s details field.
-- Used Helmet for dynamic SEO meta tags based on project data.
-- Sourced data from usePortfolioStore and used containerPadding, cardStyles, containerVariants, itemVariants, getCategoryIcon, and isValidUrl from utils/.
-- Accessibility: role="main", role="list", and focus-visible:ring.
-- Performance: Memoized project lookup and component.
-- Security: Validated URLs with isValidUrl and added rel="noopener noreferrer".
-- Testing: Test project rendering, navigation, SEO tags, and accessibility.
-- SEO: Dynamic meta tags and descriptive alt text.
-*/

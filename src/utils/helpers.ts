@@ -2,7 +2,15 @@ import type { LucideIcon } from 'lucide-react';
 import { Globe, Smartphone, Cpu, Database, Code, Palette } from 'lucide-react';
 import { ProjectCategory } from './types';
 
-// Maps project categories to Lucide icons
+/**
+ * Utility functions for the portfolio application.
+ */
+
+/**
+ * Returns the appropriate Lucide icon for a project category.
+ * @param category - The project category.
+ * @returns The corresponding Lucide icon, with Code as fallback.
+ */
 export const getCategoryIcon = (category: ProjectCategory): LucideIcon => {
   const iconMap: Record<ProjectCategory, LucideIcon> = {
     [ProjectCategory.Web]: Globe,
@@ -15,44 +23,59 @@ export const getCategoryIcon = (category: ProjectCategory): LucideIcon => {
   return iconMap[category] ?? Code;
 };
 
-// Validates URLs and relative paths
+/**
+ * Validates if a string is a valid URL, including relative paths and slugs.
+ * @param url - The string to validate, or undefined.
+ * @returns True if the string is a valid URL, path, or slug; false otherwise.
+ */
 export const isValidUrl = (url: string | undefined): boolean => {
   if (!url) return false;
-  if (url.startsWith('/') || /^[a-zA-Z0-9_-]+$/.test(url)) return true;
+  if (url.startsWith('/') || /^[\w-]+$/i.test(url)) return true;
   try {
-    new URL(url);
+    new URL(url, 'https://hemanthscode.github.io');
     return true;
   } catch {
     return false;
   }
 };
 
-// Locks body scroll for modals or mobile menus
+/**
+ * Locks the document body scroll and disables touch actions for mobile.
+ */
 export const lockScroll = (): void => {
-  const scrollBarWidth = window.innerWidth - document.documentElement.clientWidth;
   document.body.style.overflow = 'hidden';
-  document.body.style.paddingRight = `${scrollBarWidth}px`;
+  document.body.style.touchAction = 'none';
 };
 
-// Unlocks body scroll
+/**
+ * Unlocks the document body scroll and restores touch actions.
+ */
 export const unlockScroll = (): void => {
   document.body.style.overflow = '';
-  document.body.style.paddingRight = '';
+  document.body.style.touchAction = '';
 };
 
-// Scrolls to the top of the page
+/**
+ * Scrolls the window to the top with smooth behavior.
+ */
 export const scrollToTop = (): void => {
   window.scrollTo({ top: 0, behavior: 'smooth' });
 };
 
-// Debounce utility for performance optimization
-export const debounce = <T extends (...args: any[]) => any>(
-  func: T,
-  wait: number,
-): ((...args: Parameters<T>) => void) => {
-  let timeout: NodeJS.Timeout | null = null;
-  return (...args: Parameters<T>) => {
-    if (timeout) clearTimeout(timeout);
-    timeout = setTimeout(() => func(...args), wait);
-  };
+/**
+ * Normalizes a pathname by removing the portfolio base path.
+ * @param path - The pathname to normalize.
+ * @returns The normalized pathname without '/portfolio' prefix.
+ */
+export const normalizePath = (path: string): string => {
+  return path.replace(/^\/portfolio/, '');
+};
+
+/**
+ * Formats a string by trimming and normalizing whitespace.
+ * @param str - The string to format.
+ * @returns The formatted string with single spaces.
+ */
+export const formatString = (str: string): string => {
+  return str.trim().replace(/\s+/g, ' ');
 };

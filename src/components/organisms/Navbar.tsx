@@ -7,59 +7,87 @@ import { Menu, X } from 'lucide-react';
 import { usePortfolioStore } from '@/utils/config';
 import { menuVariants, containerVariants } from '@/utils/animations';
 import { lockScroll, unlockScroll, scrollToTop } from '@/utils/helpers';
-import { containerPadding, linkStyles } from '@/utils/styles';
-import { TypographyVariant, type NavbarProps } from '@/utils/types';
+import { navbarStyles } from '@/utils/styles';
+import { TypographyVariant, NavbarProps } from '@/utils/types';
+import clsx from 'clsx';
 
-const Navbar = ({ logo, brandName = 'Hemanth' }: NavbarProps) => {
+const Navbar = ({ logo, brandName = 'Hemanth Sayimpu' }: NavbarProps) => {
   const { navItems } = usePortfolioStore();
   const [isOpen, setIsOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
+  const firstLinkRef = useRef<HTMLAnchorElement>(null);
   const { pathname } = useLocation();
   const navigate = useNavigate();
 
-  const closeMenu = () => setIsOpen(false);
+  const closeMenu = useCallback(() => setIsOpen(false), []);
 
-  const handleLogoClick = useCallback((e: React.MouseEvent | React.KeyboardEvent) => {
-    e.preventDefault();
-    navigate('/');
-    scrollToTop();
-    closeMenu();
-  }, [navigate]);
+  const handleLogoClick = useCallback(
+    (e: React.MouseEvent | React.KeyboardEvent) => {
+      e.preventDefault();
+      navigate('/');
+      scrollToTop();
+      closeMenu();
+    },
+    [navigate, closeMenu]
+  );
 
   const handleNavClick = useCallback(() => {
     closeMenu();
-    setTimeout(scrollToTop, 100); // Simple delay to ensure navigation completes
-  }, []);
+    scrollToTop();
+  }, [closeMenu]);
 
-  // Handle scroll lock/unlock
   useEffect(() => {
     if (isOpen) {
       lockScroll();
-      menuRef.current?.focus();
+      firstLinkRef.current?.focus();
     } else {
       unlockScroll();
     }
-    return unlockScroll;
+    return () => unlockScroll();
   }, [isOpen]);
 
-  // Handle escape key
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
       if (e.key === 'Escape' && isOpen) closeMenu();
     };
+    const handleFocusTrap = (e: KeyboardEvent) => {
+      if (!isOpen || !menuRef.current) return;
+      const focusableElements = menuRef.current.querySelectorAll(
+        'a[href], button, [tabindex]:not([tabindex="-1"])'
+      );
+      const first = focusableElements[0] as HTMLElement;
+      const last = focusableElements[focusableElements.length - 1] as HTMLElement;
+      if (e.key === 'Tab') {
+        if (e.shiftKey && document.activeElement === first) {
+          e.preventDefault();
+          last.focus();
+        } else if (!e.shiftKey && document.activeElement === last) {
+          e.preventDefault();
+          first.focus();
+        }
+      }
+    };
     window.addEventListener('keydown', handleEscape);
-    return () => window.removeEventListener('keydown', handleEscape);
-  }, [isOpen]);
+    window.addEventListener('keydown', handleFocusTrap);
+    return () => {
+      window.removeEventListener('keydown', handleEscape);
+      window.removeEventListener('keydown', handleFocusTrap);
+    };
+  }, [isOpen, closeMenu]);
 
-  const normalizedPathname = pathname.replace(/^\/portfolio/, '');
+  // Simple normalizePath assumption: removes leading/trailing slashes
+  const normalizePath = (path: string) => path.replace(/^\/+|\/+$/g, '');
+
+  const normalizedPathname = normalizePath(pathname);
 
   const LogoComponent = logo ? (
     <motion.div
       onClick={handleLogoClick}
+      onKeyDown={(e) => e.key === 'Enter' && handleLogoClick(e)}
       className="cursor-pointer"
       whileTap={{ scale: 0.95 }}
       role="button"
-      aria-label="Navigate to home page"
+      aria-label="Navigate to homepage"
       tabIndex={0}
     >
       {logo}
@@ -67,82 +95,96 @@ const Navbar = ({ logo, brandName = 'Hemanth' }: NavbarProps) => {
   ) : (
     <motion.button
       onClick={handleLogoClick}
-      className="text-xl font-bold text-primary hover:text-primary-dark transition-colors"
+      onKeyDown={(e) => e.key === 'Enter' && handleLogoClick(e)}
+      className={navbarStyles.logo}
       whileTap={{ scale: 0.95 }}
+      aria-label="Navigate to homepage"
     >
       <Typography variant={TypographyVariant.Span}>{brandName}</Typography>
     </motion.button>
   );
 
-  const NavLink = memo(({ item, isMobile = false }: { item: { label: string; href: string }; isMobile?: boolean }) => {
-    const isActive = normalizedPathname === item.href.replace(/^\/portfolio/, '');
-    const classes = `${linkStyles} font-semibold ${isActive ? 'text-primary' : 'text-gray-700'} ${isMobile ? 'text-xl' : 'text-sm'}`;
+  const NavLink = memo(
+    ({ item, isMobile = false }: { item: { label: string; href: string }; isMobile?: boolean }) => {
+      const isActive = normalizedPathname === normalizePath(item.href);
+      const classes = clsx(
+        navbarStyles.link,
+        isActive ? 'text-primary' : 'text-gray-700',
+        isMobile && navbarStyles.mobileLink
+      );
 
-    return (
-      <motion.div
-        whileHover={{ scale: isMobile ? 1.05 : 1.02 }}
-        whileTap={{ scale: 0.98 }}
-        className="relative"
-      >
-        <Link
-          to={item.href.replace(/^\/portfolio/, '')}
-          className={classes}
-          onClick={isMobile ? handleNavClick : undefined}
-          aria-label={`Navigate to ${item.label}`}
+      return (
+        <motion.div
+          whileHover={{ scale: isMobile ? 1.05 : 1.02 }}
+          whileTap={{ scale: 0.98 }}
+          className="relative"
         >
-          {item.label}
-        </Link>
-        {!isMobile && isActive && (
-          <motion.div
-            className="absolute -bottom-1 left-0 right-0 h-0.5 bg-primary rounded-full"
-            layoutId="activeIndicator"
-            initial={{ scaleX: 0 }}
-            animate={{ scaleX: 1 }}
-          />
-        )}
-      </motion.div>
-    );
-  });
+          <Link
+            to={item.href}
+            className={classes}
+            onClick={isMobile ? handleNavClick : undefined}
+            aria-label={`Navigate to ${item.label}`}
+            aria-current={isActive ? 'page' : undefined}
+            ref={isMobile && item.href === navItems[0]?.href ? firstLinkRef : undefined}
+          >
+            {item.label}
+          </Link>
+          {!isMobile && isActive && (
+            <motion.div
+              className={navbarStyles.activeIndicator}
+              layoutId="activeIndicator"
+              initial={{ scaleX: 0 }}
+              animate={{ scaleX: 1 }}
+              transition={{ duration: 0.2 }}
+            />
+          )}
+        </motion.div>
+      );
+    }
+  );
 
   return (
     <>
       <motion.nav
-        className={`sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-100 shadow-sm ${containerPadding}`}
+        className={navbarStyles.base}
         variants={containerVariants}
         initial="hidden"
         animate="visible"
+        role="navigation"
+        aria-label="Main navigation"
       >
-        <div className="mx-auto max-w-7xl flex justify-between items-center h-16">
+        <div className={navbarStyles.container}>
           <div className="flex-shrink-0">{LogoComponent}</div>
-          
-          <div className="hidden md:flex items-center space-x-6">
+          <div className={navbarStyles.desktopMenu}>
             {navItems.map((item) => (
               <NavLink key={item.href} item={item} />
             ))}
           </div>
-          
           <motion.button
             onClick={() => setIsOpen(!isOpen)}
-            className="md:hidden p-2 text-gray-700 hover:text-primary transition-colors rounded-lg"
+            className={navbarStyles.menuButton}
             whileTap={{ scale: 0.95 }}
+            aria-label={isOpen ? 'Close menu' : 'Open menu'}
+            aria-expanded={isOpen}
           >
-            <Icon icon={isOpen ? X : Menu} className="h-8 w-8" />
+            <Icon icon={isOpen ? X : Menu} className={navbarStyles.menuIcon} aria-hidden="true" />
           </motion.button>
         </div>
       </motion.nav>
-
       <AnimatePresence>
         {isOpen && (
           <motion.div
             ref={menuRef}
-            className="fixed inset-0 bg-white/95 backdrop-blur-lg z-40 md:hidden flex flex-col justify-center items-center"
+            className={navbarStyles.mobileMenu}
             initial="closed"
             animate="open"
             exit="closed"
             variants={menuVariants}
+            role="dialog"
+            aria-label="Mobile navigation menu"
             tabIndex={-1}
           >
-            <div className="flex flex-col items-center gap-8">
+            <div className="flex flex-col items-center gap-8 xs:gap-10">
               {navItems.map((item, index) => (
                 <motion.div
                   key={item.href}

@@ -5,9 +5,14 @@ import About from '@/components/organisms/About';
 import WorkTimeline from '@/components/organisms/Work';
 import Contact from '@/components/organisms/Contact';
 import { containerVariants } from '@/utils/animations';
-import { containerPadding } from '@/utils/styles';
+import { homeStyles } from '@/utils/styles';
 import { Helmet } from 'react-helmet-async';
+import clsx from 'clsx';
 
+/**
+ * The home page component composing Hero, About, WorkTimeline, and Contact organisms.
+ * @returns A full-width page with sequential sections and SEO meta tags.
+ */
 const Home = () => {
   return (
     <>
@@ -25,14 +30,14 @@ const Home = () => {
           content="Explore the portfolio of Hemanth Sayimpu, showcasing innovative web projects."
         />
         <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://your-portfolio-url.com" />
+        <meta property="og:url" content="https://hemanthscode.github.io" />
         <meta
           property="og:image"
           content="https://images.unsplash.com/photo-1516321310762-479437144403"
         />
       </Helmet>
       <motion.div
-        className={`flex flex-col w-full bg-background ${containerPadding}`}
+        className={clsx(homeStyles.base, 'bg-background')}
         variants={containerVariants}
         initial="hidden"
         animate="visible"
@@ -49,12 +54,3 @@ const Home = () => {
 };
 
 export default memo(Home);
-
-/* Changes and Best Practices:
-- Added Helmet for SEO meta tags and Open Graph data.
-- Used containerPadding and containerVariants from utils/.
-- Accessibility: role="main" and aria-label for screen readers.
-- Performance: Memoized component to prevent re-renders.
-- Testing: Test organism rendering, SEO tags, and animations.
-- Deployment: Optimized for Vercel with static meta tags.
-*/

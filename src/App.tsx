@@ -1,31 +1,44 @@
-import { memo } from 'react';
+import { memo, Suspense, lazy } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { HelmetProvider } from 'react-helmet-async'; // Add HelmetProvider
+import { HelmetProvider } from 'react-helmet-async';
 import Navbar from '@/components/organisms/Navbar';
 import Footer from '@/components/organisms/Footer';
-import Home from '@/pages/Home';
-import About from '@/pages/About';
-import Work from '@/pages/Work';
-import Contact from '@/pages/Contact';
-import ProjectDetail from '@/pages/ProjectDetail';
 import { usePortfolioStore } from '@/utils/config';
+import LoadingSpinner from '@/components/atoms/LoadingSpinner';
+
+const Home = lazy(() => import('@/pages/Home'));
+const About = lazy(() => import('@/pages/About'));
+const WorkPage = lazy(() => import('@/pages/Work'));
+const ContactPage = lazy(() => import('@/pages/Contact'));
+const ProjectDetail = lazy(() => import('@/pages/ProjectDetail'));
+const NotFound = lazy(() => import('@/pages/NotFound'));
 
 const App = () => {
   const { hero } = usePortfolioStore();
 
   return (
-    <HelmetProvider> {/* Wrap app with HelmetProvider */}
-      <BrowserRouter>
+    <HelmetProvider>
+      <BrowserRouter
+        basename="/portfolio/"
+        future={{
+          v7_startTransition: true,
+          v7_relativeSplatPath: true,
+        }}
+      >
         <div className="flex flex-col min-h-screen bg-background">
-          <Navbar logo={hero.logo} brandName="Hemanth" />
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/work" element={<Work />} />
-            <Route path="/contact" element={<Contact />} />
-            <Route path="/project/:id" element={<ProjectDetail />} />
-            <Route path="*" element={<Home />} />
-          </Routes>
+          <Navbar logo={hero.logo} brandName={hero.name || 'Hemanth Sayimpu'} />
+          <main className="flex-grow">
+            <Suspense fallback={<LoadingSpinner className="flex justify-center items-center h-screen" />}>
+              <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/about" element={<About />} />
+                <Route path="/work" element={<WorkPage />} />
+                <Route path="/contact" element={<ContactPage />} />
+                <Route path="/project/:id" element={<ProjectDetail />} />
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </Suspense>
+          </main>
           <Footer />
         </div>
       </BrowserRouter>
@@ -34,11 +47,3 @@ const App = () => {
 };
 
 export default memo(App);
-
-/* Changes and Best Practices:
-- Added HelmetProvider to fix react-helmet-async context error.
-- Maintained memoization for performance.
-- Accessibility: Ensured semantic structure with flex-col.
-- Testing: Verify Helmet meta tags render correctly.
-- Deployment: Compatible with GitHub Pages.
-*/

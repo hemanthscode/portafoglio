@@ -1,6 +1,5 @@
 import type { Variants } from 'framer-motion';
 
-// Core animation variants for consistent transitions
 export const containerVariants: Variants = {
   hidden: { opacity: 0 },
   visible: {
@@ -8,8 +7,7 @@ export const containerVariants: Variants = {
     transition: {
       duration: 0.6,
       staggerChildren: 0.2,
-      ease: 'easeOut',
-      when: 'beforeChildren',
+      ease: [0.25, 0.1, 0.25, 1],
     },
   },
 };
@@ -19,7 +17,7 @@ export const itemVariants: Variants = {
   visible: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.4, ease: 'easeOut' },
+    transition: { duration: 0.4, ease: [0.25, 0.1, 0.25, 1] },
   },
 };
 
@@ -28,7 +26,7 @@ export const menuVariants: Variants = {
   open: {
     opacity: 1,
     x: 0,
-    transition: { duration: 0.3, ease: 'easeInOut' },
+    transition: { duration: 0.3, ease: [0.4, 0, 0.2, 1] },
   },
 };
 
@@ -46,7 +44,7 @@ export const cardVariants: Variants = {
   visible: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.5, ease: 'easeOut' },
+    transition: { duration: 0.5, ease: [0.25, 0.1, 0.25, 1] },
   },
   hover: {
     scale: 1.02,
@@ -61,7 +59,7 @@ export const socialLinkVariants: Variants = {
     scale: 1.2,
     transition: { type: 'spring', stiffness: 400, damping: 10 },
   },
-  tap: { scale: 0.95 }, // Fixed tap scale to be less aggressive
+  tap: { scale: 0.95 },
 };
 
 export const heroCardVariants: Variants = {
@@ -69,7 +67,7 @@ export const heroCardVariants: Variants = {
   visible: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.6, ease: 'easeOut' },
+    transition: { duration: 0.6, ease: [0.25, 0.1, 0.25, 1] },
   },
   hover: {
     scale: 1.02,
@@ -83,13 +81,13 @@ export const overlayVariants: Variants = {
   hidden: { opacity: 0 },
   visible: {
     opacity: 1,
-    transition: { duration: 0.3, ease: 'easeInOut' },
+    transition: { duration: 0.3, ease: [0.4, 0, 0.2, 1] },
   },
 };
 
 export const badgeVariants: Variants = {
   hover: {
-    backgroundColor: '#E5E7EB',
+    backgroundColor: 'rgba(229, 231, 235, 0.8)',
     transition: { duration: 0.2 },
   },
 };
@@ -99,27 +97,25 @@ export const detailVariants: Variants = {
   visible: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.6, ease: 'easeOut', staggerChildren: 0.2 },
+    transition: { duration: 0.6, ease: [0.25, 0.1, 0.25, 1], staggerChildren: 0.2 },
   },
 };
 
-// Respect prefers-reduced-motion for accessibility
-if (typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-  const variants = [buttonVariants, cardVariants, socialLinkVariants, heroCardVariants, detailVariants];
+// Respect prefers-reduced-motion globally
+const prefersReducedMotion = typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+if (prefersReducedMotion) {
+  const variants = [
+    buttonVariants,
+    cardVariants,
+    socialLinkVariants,
+    heroCardVariants,
+    detailVariants,
+    menuVariants,
+    badgeVariants,
+  ];
   variants.forEach((variant) => {
-    Object.keys(variant).forEach((key) => {
-      if (key === 'hover' || key === 'tap') {
-        variant[key] = { scale: 1, y: 0, transition: { duration: 0 } };
-      }
-    });
+    variant.hover = { scale: 1, y: 0, transition: { duration: 0 } };
+    variant.tap = { scale: 1, transition: { duration: 0 } };
   });
 }
-
-/* Changes and Best Practices:
-- Fixed socialLinkVariants tap scale to 0.95 for consistency with other components.
-- Simplified prefers-reduced-motion logic by looping over variants array.
-- Ensured all variants are typed with Variants from framer-motion.
-- Accessibility: Respects prefers-reduced-motion to disable animations for users who prefer minimal motion.
-- Performance: Lightweight variants with optimized transition durations.
-- Testing: Verify each variant’s transition properties and prefers-reduced-motion behavior.
-*/

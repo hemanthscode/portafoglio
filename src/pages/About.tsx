@@ -5,27 +5,41 @@ import Button from '@/components/atoms/Button';
 import Icon from '@/components/atoms/Icon';
 import Typography from '@/components/atoms/Typography';
 import { containerVariants, heroCardVariants, cardVariants, overlayVariants } from '@/utils/animations';
-import { containerPadding } from '@/utils/styles';
+import { aboutPageStyles } from '@/utils/styles';
 import { isValidUrl } from '@/utils/helpers';
 import { Helmet } from 'react-helmet-async';
 import { TypographyVariant, Variant, Size, type AboutCard } from '@/utils/types';
+import clsx from 'clsx';
 
+/**
+ * The About page displaying a dynamic grid of cards with hover effects and a CTA.
+ * @returns A responsive page with a grid layout, interactive cards, and SEO meta tags.
+ */
 const AboutPage = () => {
   const { about } = usePortfolioStore();
   const [activeCard, setActiveCard] = useState<number | null>(null);
 
   const getSizeClasses = useCallback((size: Size) => {
-    switch (size) {
-      case Size.Large:
-        return 'md:col-span-2 md:row-span-2 min-h-[300px]';
-      case Size.Medium:
-        return 'md:col-span-2 min-h-[200px]';
-      case Size.Small:
-        return 'min-h-[150px]';
-      default:
-        return 'min-h-[150px]';
-    }
+    return clsx({
+      'md:col-span-2 md:row-span-2 min-h-[300px] xs:min-h-[320px]': size === Size.Large,
+      'md:col-span-2 min-h-[200px] xs:min-h-[220px]': size === Size.Medium,
+      'min-h-[150px] xs:min-h-[170px]': size === Size.Small,
+    });
   }, []);
+
+  const getTypographyClasses = (size: Size) => {
+    return {
+      title: clsx({
+        'text-2xl xs:text-3xl sm:text-4xl': size === Size.Large,
+        'text-lg xs:text-xl sm:text-2xl': size === Size.Medium,
+        'text-base xs:text-lg sm:text-xl': size === Size.Small,
+      }),
+      content: clsx({
+        'text-sm xs:text-base sm:text-lg': size === Size.Large,
+        'text-xs xs:text-sm sm:text-base': size === Size.Medium || size === Size.Small,
+      }),
+    };
+  };
 
   return (
     <>
@@ -42,116 +56,134 @@ const AboutPage = () => {
           content="Discover the journey and skills of Hemanth Sayimpu in web development."
         />
         <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://your-portfolio-url.com/about" />
+        <meta property="og:url" content="https://hemanthscode.github.io/about" />
         <meta
           property="og:image"
           content="https://images.unsplash.com/photo-1516321310762-479437144403"
         />
       </Helmet>
       <motion.div
-        className={`min-h-screen bg-background py-12 ${containerPadding}`}
+        className={clsx(aboutPageStyles.base, 'bg-background')}
         variants={containerVariants}
         initial="hidden"
         animate="visible"
         role="main"
         aria-labelledby="about-page-title"
       >
-        <motion.div className="text-center mb-12 sm:mb-16" variants={containerVariants}>
+        <motion.div className={aboutPageStyles.header} variants={containerVariants}>
           <Typography
             variant={TypographyVariant.H1}
             id="about-page-title"
-            className="text-3xl sm:text-4xl font-bold text-text mb-4"
+            className={aboutPageStyles.title}
+            role="heading"
+            aria-level={1}
           >
-            {about.title || 'About Me'}
+            {about.title}
           </Typography>
           <Typography
             variant={TypographyVariant.P}
-            className="text-base sm:text-xl text-accent max-w-2xl mx-auto"
+            className={aboutPageStyles.description}
           >
-            {about.description || 'Discover my journey in crafting digital solutions.'}
+            {about.description}
           </Typography>
         </motion.div>
 
-        <div className="max-w-7xl mx-auto">
+        <div className={aboutPageStyles.container}>
           {about.cards?.length ? (
             <motion.div
-              className="grid grid-cols-1 md:grid-cols-4 gap-4 auto-rows-auto"
+              className={aboutPageStyles.cardGrid}
               variants={containerVariants}
               role="list"
             >
-              {about.cards.map((card: AboutCard, index: number) => (
-                <motion.div
-                  key={card.id}
-                  variants={card.type === 'hero' ? heroCardVariants : cardVariants}
-                  initial="hidden"
-                  animate="visible"
-                  transition={{ delay: index * 0.1 }}
-                  className={`${getSizeClasses(card.size)} ${card.bgColor} rounded-3xl p-4 sm:p-6 cursor-pointer relative overflow-hidden group focus-visible:ring-2 focus-visible:ring-primary outline-none`}
-                  onMouseEnter={() => setActiveCard(card.id)}
-                  onMouseLeave={() => setActiveCard(null)}
-                  whileHover="hover"
-                  whileTap="tap"
-                  role="listitem"
-                  aria-labelledby={`card-${card.id}`}
-                  tabIndex={0}
-                >
-                  <div className={`h-full flex flex-col justify-between relative z-10`}>
-                    {card.icon && (
-                      <div className="mb-3 sm:mb-4">
-                        <Icon
-                          icon={card.icon}
-                          className={`${card.textColor || 'text-white'} ${card.size === Size.Large ? 'w-8 h-8' : 'w-6 h-6'}`}
-                          aria-hidden="true"
-                        />
-                      </div>
+              {about.cards.map((card: AboutCard, index: number) => {
+                const typographyClasses = getTypographyClasses(card.size);
+                return (
+                  <motion.button
+                    key={card.id}
+                    variants={card.type === 'hero' ? heroCardVariants : cardVariants}
+                    initial="hidden"
+                    animate="visible"
+                    transition={{ delay: index * 0.1 }}
+                    className={clsx(
+                      aboutPageStyles.card,
+                      getSizeClasses(card.size),
+                      card.bgColor,
+                      'relative overflow-hidden group'
                     )}
-                    <Typography
-                      variant={card.size === Size.Large ? TypographyVariant.H2 : TypographyVariant.H3}
-                      className={`mb-2 sm:mb-3 ${card.size === Size.Large ? 'text-2xl sm:text-3xl md:text-4xl' : card.size === Size.Medium ? 'text-lg sm:text-xl' : 'text-base sm:text-lg'} ${card.textColor || 'text-white'}`}
-                      id={`card-${card.id}`}
-                    >
-                      {card.title}
-                    </Typography>
-                    {card.subtitle && (
+                    onMouseEnter={() => setActiveCard(card.id)}
+                    onMouseLeave={() => setActiveCard(null)}
+                    whileHover="hover"
+                    whileTap="tap"
+                    role="listitem"
+                    aria-labelledby={`card-${card.id}`}
+                    onClick={() => {}}
+                  >
+                    <div className="h-full flex flex-col justify-between relative z-10">
+                      {card.icon && (
+                        <div className="mb-3 xs:mb-4">
+                          <Icon
+                            icon={card.icon}
+                            className={clsx(
+                              card.textColor || 'text-white',
+                              card.size === Size.Large ? 'w-8 h-8 xs:w-9 xs:h-9' : 'w-6 h-6 xs:w-7 xs:h-7'
+                            )}
+                            aria-hidden="true"
+                          />
+                        </div>
+                      )}
+                      <Typography
+                        variant={card.size === Size.Large ? TypographyVariant.H2 : TypographyVariant.H3}
+                        className={clsx(typographyClasses.title, card.textColor || 'text-white', 'mb-2 xs:mb-3')}
+                        id={`card-${card.id}`}
+                        role="heading"
+                        aria-level={card.size === Size.Large ? 2 : 3}
+                      >
+                        {card.title}
+                      </Typography>
+                      {card.subtitle && (
+                        <Typography
+                          variant={TypographyVariant.P}
+                          className={clsx(
+                            'text-sm xs:text-base sm:text-lg opacity-80 mb-3 xs:mb-4',
+                            card.textColor || 'text-white'
+                          )}
+                        >
+                          {card.subtitle}
+                        </Typography>
+                      )}
                       <Typography
                         variant={TypographyVariant.P}
-                        className={`text-base sm:text-lg opacity-80 mb-3 sm:mb-4 ${card.textColor || 'text-white'}`}
+                        className={clsx(typographyClasses.content, card.textColor || 'text-white')}
                       >
-                        {card.subtitle}
+                        {card.content}
                       </Typography>
+                    </div>
+                    <motion.div
+                      className={aboutPageStyles.cardOverlay}
+                      variants={overlayVariants}
+                      initial="hidden"
+                      animate={activeCard === card.id ? 'visible' : 'hidden'}
+                    />
+                    {card.type === 'hero' && (
+                      <div
+                        className={aboutPageStyles.heroDecoration}
+                        aria-hidden="true"
+                      />
                     )}
-                    <Typography
-                      variant={TypographyVariant.P}
-                      className={`${card.size === Size.Large ? 'text-base sm:text-lg' : 'text-sm sm:text-base'} ${card.textColor || 'text-white'}`}
-                    >
-                      {card.content}
-                    </Typography>
-                  </div>
-                  <motion.div
-                    className="absolute inset-0 bg-gradient-to-br from-white/20 to-transparent"
-                    variants={overlayVariants}
-                    initial="hidden"
-                    animate={activeCard === card.id ? 'visible' : 'hidden'}
-                  />
-                  {card.type === 'hero' && (
-                    <div
-                      className="absolute -top-4 -right-4 w-24 h-24 bg-white/10 rounded-full"
-                      aria-hidden="true"
-                    />
-                  )}
-                  {card.type === 'stat' && (
-                    <div
-                      className="absolute -bottom-2 -right-2 w-16 h-16 bg-gradient-to-br from-orange-400 to-red-500 rounded-full opacity-20"
-                      aria-hidden="true"
-                    />
-                  )}
-                </motion.div>
-              ))}
+                    {card.type === 'stat' && (
+                      <div
+                        className={aboutPageStyles.statDecoration}
+                        aria-hidden="true"
+                      />
+                    )}
+                  </motion.button>
+                );
+              })}
             </motion.div>
           ) : (
             <Typography
               variant={TypographyVariant.P}
-              className="text-center text-accent"
+              className="text-center text-accent text-sm xs:text-base"
               role="alert"
             >
               No cards available.
@@ -165,29 +197,31 @@ const AboutPage = () => {
             whileInView="visible"
             viewport={{ once: true }}
             variants={containerVariants}
-            className="text-center mt-16 sm:mt-20"
+            className={aboutPageStyles.cta}
           >
             <Typography
               variant={TypographyVariant.H2}
-              className="text-2xl sm:text-3xl font-bold text-text mb-4 sm:mb-6"
+              className={aboutPageStyles.ctaTitle}
+              role="heading"
+              aria-level={2}
             >
-              {about.cta.title || 'Ready to Collaborate?'}
+              {about.cta.title}
             </Typography>
             <Typography
               variant={TypographyVariant.P}
-              className="text-base sm:text-xl text-accent mb-6 sm:mb-8 max-w-2xl mx-auto"
+              className={aboutPageStyles.ctaDescription}
             >
-              {about.cta.description || 'Let’s build something amazing together.'}
+              {about.cta.description}
             </Typography>
             <Button
-              to={isValidUrl(about.cta.buttonLink) ? about.cta.buttonLink : '#'}
+              to={about.cta.buttonLink}
               variant={Variant.Primary}
               size={Size.Large}
-              className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:shadow-xl transition-shadow duration-300 focus-visible:ring-2 focus-visible:ring-primary"
-              ariaLabel={about.cta.buttonText || 'Get Started'}
+              ariaLabel={about.cta.buttonText}
+              className={aboutPageStyles.ctaButton}
               disabled={!isValidUrl(about.cta.buttonLink)}
             >
-              {about.cta.buttonText || 'Get Started'}
+              {about.cta.buttonText}
             </Button>
           </motion.div>
         )}

@@ -2,15 +2,27 @@ import { memo, useState } from 'react';
 import { motion } from 'framer-motion';
 import type { LazyImageProps } from '@/utils/types';
 
-const LazyImage = ({ src, alt, className = '' }: LazyImageProps) => {
+/**
+ * A lazy-loaded image component with placeholder and error handling.
+ * @param props - Image properties including source, alt text, and sizes.
+ * @returns A motion-enabled image with fade-in animation and fallback placeholder.
+ */
+const LazyImage = ({
+  src,
+  alt,
+  className,
+  sizes = '100vw',
+  placeholder = 'data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==',
+}: LazyImageProps) => {
   const [isLoaded, setIsLoaded] = useState(false);
   const [hasError, setHasError] = useState(false);
 
   return (
-    <div className={`relative ${className}`} role="img" aria-label={alt}>
+    <div className={className} role="img" aria-label={alt}>
       {(!isLoaded || hasError) && (
         <div
           className="absolute inset-0 bg-gray-200 animate-pulse rounded-xl"
+          style={{ backgroundImage: `url(${placeholder})` }}
           aria-hidden="true"
         />
       )}
@@ -20,7 +32,7 @@ const LazyImage = ({ src, alt, className = '' }: LazyImageProps) => {
           alt={alt}
           className="w-full h-full object-cover rounded-xl"
           loading="lazy"
-          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+          sizes={sizes}
           onLoad={() => setIsLoaded(true)}
           onError={() => setHasError(true)}
           initial={{ opacity: 0 }}
@@ -33,11 +45,3 @@ const LazyImage = ({ src, alt, className = '' }: LazyImageProps) => {
 };
 
 export default memo(LazyImage);
-
-/* Changes and Best Practices:
-- Used LazyImageProps from types.ts.
-- Optimized for LCP with lazy loading and responsive sizes.
-- Accessibility: role="img" and aria-label for screen readers.
-- Performance: Memoized and uses Framer Motion for smooth fade-in.
-- Testing: Test loading/error states and animation transitions.
-*/

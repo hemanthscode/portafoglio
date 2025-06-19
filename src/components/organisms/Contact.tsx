@@ -6,124 +6,142 @@ import Icon from '@/components/atoms/Icon';
 import Typography from '@/components/atoms/Typography';
 import { Mail, MapPin, Github } from 'lucide-react';
 import { containerVariants } from '@/utils/animations';
-import { containerPadding } from '@/utils/styles';
+import { contactStyles } from '@/utils/styles';
+import { isValidUrl } from '@/utils/helpers';
 import { TypographyVariant, Variant, Size } from '@/utils/types';
+import clsx from 'clsx';
 
+/**
+ * A contact section component with email, location, and action buttons.
+ * @returns A responsive contact section with animated cards and buttons.
+ */
 const Contact = () => {
   const { contact } = usePortfolioStore();
   const [isEmailLoading, setIsEmailLoading] = useState(false);
 
   const handleEmailClick = () => {
+    if (!contact.email) return;
     setIsEmailLoading(true);
-    setTimeout(() => setIsEmailLoading(false), 1000); // Simulate async action
+    setTimeout(() => setIsEmailLoading(false), 1000);
   };
 
   return (
     <motion.section
-      className={`py-12 sm:py-16 lg:py-20 bg-background ${containerPadding}`}
+      className={clsx(contactStyles.base, 'w-full')}
       variants={containerVariants}
       initial="hidden"
       animate="visible"
       role="region"
       aria-labelledby="contact-title"
     >
-      <div className="max-w-4xl mx-auto text-center">
-        {/* Header */}
-        <motion.div className="mb-10 sm:mb-12" variants={containerVariants}>
+      <div className={contactStyles.container}>
+        <motion.div className={contactStyles.header} variants={containerVariants}>
           <Typography
             variant={TypographyVariant.H2}
             id="contact-title"
-            className="text-3xl sm:text-4xl font-bold mb-4"
+            className="text-2xl xs:text-3xl sm:text-4xl font-bold mb-3 xs:mb-4"
+            role="heading"
+            aria-level={2}
           >
-            {contact.title || 'Get In Touch'}
+            {contact.title}
           </Typography>
           <Typography
             variant={TypographyVariant.P}
-            className="text-base sm:text-lg text-accent max-w-2xl mx-auto"
+            className="text-sm xs:text-base sm:text-lg text-accent max-w-2xl mx-auto"
           >
-            {contact.description || "Let's work together to create something amazing."}
+            {contact.description}
           </Typography>
         </motion.div>
 
-        {/* Contact Info */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 mb-10 sm:mb-12">
+        <div className={contactStyles.cardGrid} role="list">
           <motion.div
-            className="bg-gray-50 p-4 sm:p-6 rounded-xl border border-gray-200"
+            className={contactStyles.card}
             variants={containerVariants}
+            role="listitem"
           >
-            <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <Icon icon={Mail} className="w-6 h-6 text-blue-600" aria-hidden="true" />
+            <div className={contactStyles.iconWrapper}>
+              <Icon icon={Mail} className={contactStyles.icon} aria-hidden="true" />
             </div>
-            <Typography variant={TypographyVariant.H3} className="font-semibold mb-2">
+            <Typography
+              variant={TypographyVariant.H3}
+              className="font-semibold mb-2 text-base xs:text-lg"
+              role="heading"
+              aria-level={3}
+            >
               Email Me
             </Typography>
-            <Typography variant={TypographyVariant.P} className="text-accent">
-              {contact.email || 'your.email@example.com'}
+            <Typography
+              variant={TypographyVariant.P}
+              className="text-accent text-sm xs:text-base"
+              aria-label={`Email: ${contact.email}`}
+            >
+              {contact.email}
             </Typography>
           </motion.div>
 
           <motion.div
-            className="bg-gray-50 p-4 sm:p-6 rounded-xl border border-gray-200"
+            className={contactStyles.card}
             variants={containerVariants}
+            role="listitem"
           >
-            <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <Icon icon={MapPin} className="w-6 h-6 text-green-600" aria-hidden="true" />
+            <div className={contactStyles.iconWrapper}>
+              <Icon icon={MapPin} className={contactStyles.icon} aria-hidden="true" />
             </div>
-            <Typography variant={TypographyVariant.H3} className="font-semibold mb-2">
+            <Typography
+              variant={TypographyVariant.H3}
+              className="font-semibold mb-2 text-base xs:text-lg"
+              role="heading"
+              aria-level={3}
+            >
               Location
             </Typography>
-            <Typography variant={TypographyVariant.P} className="text-accent">
+            <Typography
+              variant={TypographyVariant.P}
+              className="text-accent text-sm xs:text-base"
+              aria-label="Location: Guntur, Andhra Pradesh, IN"
+            >
               Guntur, Andhra Pradesh, IN
             </Typography>
           </motion.div>
         </div>
 
-        {/* Action Buttons */}
         <motion.div
-          className="flex flex-col sm:flex-row gap-4 justify-center"
+          className={contactStyles.buttonContainer}
           variants={containerVariants}
+          role="group"
+          aria-label="Contact actions"
         >
           <Button
             href={contact.email ? `mailto:${contact.email}` : '#'}
             variant={Variant.Primary}
             size={Size.Medium}
             ariaLabel="Send email"
-            className="px-6 sm:px-8"
+            className="px-5 xs:px-6 sm:px-8"
             disabled={!contact.email}
             loading={isEmailLoading}
             onClick={handleEmailClick}
+            icon={<Mail className="w-5 h-5" />}
           >
-            <Icon icon={Mail} className="mr-2 w-5 h-5" aria-hidden="true" />
             Send Email
           </Button>
-          <Button
-            href={contact.githubUrl || 'https://github.com/hemanthscode'}
-            variant={Variant.Outline}
-            size={Size.Medium}
-            ariaLabel="Visit GitHub profile"
-            className="px-6 sm:px-8"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Icon icon={Github} className="mr-2 w-5 h-5" aria-hidden="true" />
-            GitHub
-          </Button>
+          {isValidUrl(contact.githubUrl) && (
+            <Button
+              href={contact.githubUrl}
+              variant={Variant.Outline}
+              size={Size.Medium}
+              ariaLabel="Visit GitHub profile"
+              className="px-5 xs:px-6 sm:px-8"
+              target="_blank"
+              rel="noopener noreferrer"
+              icon={<Github className="w-5 h-5" />}
+            >
+              GitHub
+            </Button>
+          )}
         </motion.div>
       </div>
     </motion.section>
   );
 };
 
-// Memoize to prevent unnecessary re-renders
 export default memo(Contact);
-
-/* Changes and Best Practices:
-- Added loading state for email button with simulated async action.
-- Used containerPadding and containerVariants from utils/.
-- Added error handling for missing email with disabled button.
-- Accessibility: Proper ARIA roles, labels, and disabled states.
-- Performance: Memoized component and used stable references for buttons.
-- Responsiveness: Tailwind grid for mobile-first design.
-- Testing: Test email button loading, GitHub link, and accessibility.
-- Security: Validated email href with mailto: protocol.
-*/

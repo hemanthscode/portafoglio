@@ -6,25 +6,32 @@ import Typography from '@/components/atoms/Typography';
 import { Github, Linkedin } from 'lucide-react';
 import { isValidUrl } from '@/utils/helpers';
 import { containerVariants } from '@/utils/animations';
-import { containerPadding } from '@/utils/styles';
+import { footerStyles } from '@/utils/styles';
 import { TypographyVariant } from '@/utils/types';
+import clsx from 'clsx';
 
+/**
+ * A footer component displaying social links and copyright information.
+ * @returns A centered footer with animated social links.
+ */
 const Footer = () => {
   const { footer } = usePortfolioStore();
 
   return (
     <motion.footer
-      className={`w-full bg-background py-4 sm:py-6 lg:py-8 ${containerPadding}`}
+      className={clsx(footerStyles.base, 'w-full')}
       variants={containerVariants}
       initial="hidden"
       animate="visible"
       role="contentinfo"
       aria-label="Footer"
     >
-      <div className="text-center max-w-md sm:max-w-lg md:max-w-2xl lg:max-w-3xl mx-auto">
+      <div className={footerStyles.container}>
         <motion.div
-          className="flex justify-center gap-3 sm:gap-4 lg:gap-6 mb-2 sm:mb-4"
+          className={footerStyles.socialLinks}
           variants={containerVariants}
+          role="list"
+          aria-label="Social links"
         >
           {isValidUrl(footer.githubUrl) && (
             <SocialLink
@@ -41,7 +48,10 @@ const Footer = () => {
             />
           )}
         </motion.div>
-        <Typography variant={TypographyVariant.Span} className="text-xs sm:text-sm lg:text-base">
+        <Typography
+          variant={TypographyVariant.Span}
+          className="text-xs xs:text-sm text-accent"
+        >
           {footer.copyright}
         </Typography>
       </div>
@@ -50,12 +60,3 @@ const Footer = () => {
 };
 
 export default memo(Footer);
-
-/* Changes and Best Practices:
-- Sourced data from usePortfolioStore and used isValidUrl for link validation.
-- Used containerPadding, containerVariants from utils/.
-- Accessibility: role="contentinfo" and aria-label.
-- Performance: Memoized component and conditional rendering for social links.
-- Testing: Test social link rendering, URL validation, and accessibility.
-- Security: Safe external links with isValidUrl.
-*/

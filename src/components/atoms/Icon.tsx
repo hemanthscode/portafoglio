@@ -1,11 +1,17 @@
 import { memo } from 'react';
 import type { IconProps } from '@/utils/types';
 
-const Icon = ({ icon: IconComponent, className = '', ariaHidden = true }: IconProps) => {
+/**
+ * A reusable icon component for rendering Lucide icons with accessibility support.
+ * @param props - Icon properties including the icon component and ARIA attributes.
+ * @returns An accessible icon with customizable styling.
+ */
+const Icon = ({ icon: IconComponent, className, ariaHidden = true, ariaLabel }: IconProps) => {
   return (
     <IconComponent
-      className={`text-current ${className}`}
+      className={className}
       aria-hidden={ariaHidden}
+      aria-label={ariaLabel}
       role={ariaHidden ? undefined : 'img'}
       focusable={false}
     />
@@ -13,11 +19,3 @@ const Icon = ({ icon: IconComponent, className = '', ariaHidden = true }: IconPr
 };
 
 export default memo(Icon);
-
-/* Changes and Best Practices:
-- Used IconProps from types.ts for type safety.
-- Maintained focusable={false} for decorative icons.
-- Accessibility: Configurable aria-hidden for decorative vs. meaningful icons.
-- Performance: Memoized to prevent re-renders unless props change.
-- Testing: Verify className application and ARIA attributes.
-*/

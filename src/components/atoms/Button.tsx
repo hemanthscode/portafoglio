@@ -1,18 +1,24 @@
-import { memo, type ComponentType } from 'react';
-import { motion, type MotionProps } from 'framer-motion';
+import { memo } from 'react';
+import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
+import clsx from 'clsx';
 import { isValidUrl } from '@/utils/helpers';
 import { buttonVariants } from '@/utils/animations';
 import { buttonStyles } from '@/utils/styles';
 import { Size, Variant, type ButtonProps } from '@/utils/types';
 
+/**
+ * A customizable, accessible button component supporting links, custom components, and animations.
+ * @param props - Button properties including variant, size, and accessibility attributes.
+ * @returns A motion-enabled button or link with loading and disabled states.
+ */
 const Button = ({
   children,
   href,
   to,
   variant = Variant.Primary,
   size = Size.Medium,
-  className = '',
+  className,
   ariaLabel,
   as: ComponentOverride,
   disabled = false,
@@ -22,66 +28,76 @@ const Button = ({
   rel,
   icon,
 }: ButtonProps) => {
-  const combinedStyles = [
+  const classes = clsx(
     buttonStyles.base,
     buttonStyles.variants[variant],
     buttonStyles.sizes[size],
-    disabled || loading ? 'opacity-50 cursor-not-allowed' : '',
     className,
-  ].filter(Boolean).join(' ');
+  );
 
-  const Component = ComponentOverride
-    ? motion<ComponentType<any>>(ComponentOverride as any)
-    : to
-    ? motion(Link)
-    : href && isValidUrl(href)
-    ? motion.a
-    : motion.button;
-
-  const motionProps: MotionProps & {
-    href?: string;
-    to?: string;
-    type?: 'button' | 'submit' | 'reset';
-    onClick?: () => void;
-    disabled?: boolean;
-    className: string;
-    'aria-label'?: string;
-    'aria-disabled'?: boolean;
-    target?: string;
-    rel?: string;
-  } = {
-    ...(href && isValidUrl(href) ? { href, target: target || '_blank', rel: rel || 'noopener noreferrer' } : {}),
-    ...(to ? { to } : {}),
-    ...(!href && !to ? { type: 'button', onClick } : {}),
-    disabled: disabled || loading,
-    className: combinedStyles,
-    'aria-label': ariaLabel || (typeof children === 'string' ? children : undefined),
+  const commonProps = {
+    className: classes,
+    'aria-label': ariaLabel,
     'aria-disabled': disabled || loading,
     variants: buttonVariants,
     whileHover: disabled || loading ? undefined : 'hover',
     whileTap: disabled || loading ? undefined : 'tap',
   };
 
-  return (
-    <Component {...motionProps}>
+  const renderContent = () => (
+    <>
       {loading && (
-        <span className="mr-2 animate-spin" aria-hidden="true">
-          ⌀
-        </span>
+        <span
+          className={clsx(
+            'mr-2 animate-spin inline-block border-2 border-current border-t-transparent rounded-full',
+            buttonStyles.spinnerSizes[size],
+          )}
+          aria-hidden="true"
+        />
       )}
       {icon && <span className="mr-2">{icon}</span>}
       {children}
-    </Component>
+    </>
+  );
+
+  if (ComponentOverride) {
+    const MotionComponent = motion(ComponentOverride);
+    return <MotionComponent {...commonProps}>{renderContent()}</MotionComponent>;
+  }
+
+  if (to) {
+    const MotionLink = motion(Link);
+    return (
+      <MotionLink {...commonProps} to={to}>
+        {renderContent()}
+      </MotionLink>
+    );
+  }
+
+  if (href && isValidUrl(href)) {
+    const isExternal = /^https?:\/\//.test(href);
+    return (
+      <motion.a
+        {...commonProps}
+        href={href}
+        target={target || (isExternal ? '_blank' : undefined)}
+        rel={isExternal ? rel || 'noopener noreferrer' : rel}
+      >
+        {renderContent()}
+      </motion.a>
+    );
+  }
+
+  return (
+    <motion.button
+      {...commonProps}
+      type="button"
+      onClick={onClick}
+      disabled={disabled || loading}
+    >
+      {renderContent()}
+    </motion.button>
   );
 };
 
 export default memo(Button);
-
-/* Changes and Best Practices:
-- Ensured buttonStyles and buttonVariants are sourced from utils/.
-- Used isValidUrl from helpers.ts for href validation.
-- Accessibility: aria-label fallback and aria-disabled for disabled/loading states.
-- Performance: Memoized component to prevent unnecessary re-renders.
-- Responsiveness: touch-action-manipulation in buttonStyles.sizes ensures mobile performance.
-- Testing: Test click handlers, disabled/loading states, and accessibility.
-*/
