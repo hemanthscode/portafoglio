@@ -170,7 +170,7 @@ export interface NavItem {
 
 export interface NavbarProps {
   brandName?: string;
-  logo?: ReactNode;
+  logo?: ReactElement;
 }
 
 export interface WorkProps {

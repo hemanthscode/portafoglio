@@ -26,7 +26,7 @@ const App = () => {
         }}
       >
         <div className="flex flex-col min-h-screen bg-background">
-          <Navbar logo={hero.logo} brandName={hero.name || 'Hemanth Sayimpu'} />
+          <Navbar brandName={'Hemanth'} />
           <main className="flex-grow">
             <Suspense fallback={<LoadingSpinner className="flex justify-center items-center h-screen" />}>
               <Routes>

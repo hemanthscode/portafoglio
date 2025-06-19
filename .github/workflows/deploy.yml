@@ -32,8 +32,17 @@ jobs:
             project-npm-${{ runner.os }}-
 
       - name: Install dependencies
-        run: npm ci
+        run: |
+          if [ "${{ steps.cache-npm.outputs.cache-hit }}" != "true" ]; then
+            npm ci || (npm install && npm cache clean --force)
+          fi
+
+      - name: Save cache
         if: steps.cache-npm.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: node_modules
+          key: project-npm-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
 
       - name: Build project
         run: npm run build
