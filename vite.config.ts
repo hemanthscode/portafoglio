@@ -2,37 +2,38 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import path from 'path';
 
+/** @type {import('vite').UserConfig} */
 export default defineConfig({
   plugins: [react()],
-  base: '/portfolio',
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, 'src'),
+      '@': path.resolve(__dirname, './src'),
     },
   },
   css: {
     postcss: './postcss.config.js',
   },
+  base: '/portfolio/',
   build: {
+    outDir: 'dist',
+    sourcemap: false,
+    minify: 'esbuild',
     rollupOptions: {
       output: {
         manualChunks: {
           vendor: ['react', 'react-dom', 'react-router-dom'],
-          animations: ['framer-motion'],
-          icons: ['lucide-react'],
-          state: ['zustand'],
+          framer: ['framer-motion'],
+          lucide: ['lucide-react'],
         },
       },
     },
-    minify: 'esbuild',
-    sourcemap: false,
-    assetsInlineLimit: 4096,
-    cssCodeSplit: true,
-    outDir: 'dist',
-    assetsDir: 'assets',
+    chunkSizeWarningLimit: 600,
+  },
+  optimizeDeps: {
+    include: ['react', 'react-dom', 'react-router-dom', 'framer-motion', 'lucide-react'],
   },
   server: {
-    open: '/portfolio',
-    port: 5173,
+    open: true,
+    port: 3000,
   },
 });

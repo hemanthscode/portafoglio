@@ -1,12 +1,14 @@
-import { motion } from 'framer-motion';
 import { memo, useMemo } from 'react';
+import { motion } from 'framer-motion';
 import { usePortfolioStore } from '@/utils/config';
 import Button from '@/components/atoms/Button';
 import Icon from '@/components/atoms/Icon';
+import LazyImage from '@/components/atoms/LazyImage';
 import Typography from '@/components/atoms/Typography';
-import { Github as GithubIcon, ArrowRight, Code2 } from 'lucide-react';
+import { Github, ArrowRight, Code2 } from 'lucide-react';
 import { containerVariants, itemVariants } from '@/utils/animations';
 import { containerPadding } from '@/utils/styles';
+import { isValidUrl } from '@/utils/helpers';
 import { TypographyVariant, Variant, Size } from '@/utils/types';
 
 const HeroGeometric = () => {
@@ -15,7 +17,7 @@ const HeroGeometric = () => {
 
   return (
     <motion.section
-      className={`min-h-[calc(100vh-4rem)] w-full flex items-center justify-center ${containerPadding} py-8 sm:py-12 lg:py-16`}
+      className={`min-h-[calc(100vh-4rem)] w-full flex items-center justify-center ${containerPadding} py-8 sm:py-12 lg:py-16 bg-background`}
       variants={containerVariants}
       initial="hidden"
       animate="visible"
@@ -23,15 +25,7 @@ const HeroGeometric = () => {
       aria-labelledby="hero-title"
     >
       <div className="w-full max-w-sm sm:max-w-md md:max-w-3xl lg:max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 lg:gap-12 items-center">
-        <motion.div
-          className="space-y-4 sm:space-y-6 lg:space-y-8 relative z-10"
-          variants={containerVariants}
-        >
-          {hero.logo && (
-            <motion.div variants={itemVariants} className="mb-2 sm:mb-4">
-              <div className="w-20 h-auto sm:w-24 lg:w-32">{hero.logo}</div>
-            </motion.div>
-          )}
+        <motion.div className="space-y-4 sm:space-y-6 lg:space-y-8 relative z-10" variants={containerVariants}>
           <motion.div variants={itemVariants}>
             <motion.div className="flex items-center gap-2 sm:gap-3 mb-4 sm:mb-6">
               <div className="flex items-center gap-1 sm:gap-2">
@@ -82,47 +76,39 @@ const HeroGeometric = () => {
               {hero.subheadline}
             </Typography>
           </motion.div>
-          <motion.div
-            className="flex flex-col sm:flex-row gap-2 sm:gap-4"
-            variants={itemVariants}
-          >
+          <motion.div className="flex flex-col sm:flex-row gap-2 sm:gap-4" variants={itemVariants}>
             <Button
               to={hero.ctaLink}
               variant={Variant.Primary}
               size={Size.Large}
               ariaLabel={hero.ctaText}
               className="w-full sm:w-auto"
+              disabled={!isValidUrl(hero.ctaLink)}
             >
               {hero.ctaText}
-              <Icon
-                icon={ArrowRight}
-                className="ml-1 sm:ml-2 w-4 h-4 sm:w-5 sm:h-5"
-                aria-hidden="true"
-              />
+              <Icon icon={ArrowRight} className="ml-1 sm:ml-2 w-4 h-4 sm:w-5 sm:h-5" aria-hidden="true" />
             </Button>
-            <Button
-              href={hero.githubUrl}
-              variant={Variant.Outline}
-              size={Size.Large}
-              ariaLabel="Visit my GitHub profile"
-              className="w-full sm:w-auto"
-            >
-              <Icon
-                icon={GithubIcon}
-                className="mr-1 sm:mr-2 w-4 h-4 sm:w-5 sm:h-5"
-                aria-hidden="true"
-              />
-              GitHub
-            </Button>
+            {isValidUrl(hero.githubUrl) && (
+              <Button
+                href={hero.githubUrl}
+                variant={Variant.Outline}
+                size={Size.Large}
+                ariaLabel="Visit my GitHub profile"
+                className="w-full sm:w-auto"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <Icon icon={Github} className="mr-1 sm:mr-2 w-4 h-4 sm:w-5 sm:h-5" aria-hidden="true" />
+                GitHub
+              </Button>
+            )}
           </motion.div>
         </motion.div>
-        <motion.div
-          className="hidden lg:block relative"
-          variants={containerVariants}
-        >
-          <div
-            className="w-full h-64 sm:h-80 lg:h-96 bg-gray-200 rounded-2xl"
-            aria-hidden="true"
+        <motion.div className="hidden lg:block relative" variants={containerVariants}>
+          <LazyImage
+            src="https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExbzNuamN6Y2dkYjZkNDdib3VmaGkxdmU0bjNtdnVrbjNqb3VpcGU5YiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/3oz8xLqq4wir07TFss/giphy.gif"
+            alt="Hero illustration"
+            className="w-full h-64 sm:h-80 lg:h-96 rounded-2xl"
           />
         </motion.div>
       </div>
@@ -131,3 +117,13 @@ const HeroGeometric = () => {
 };
 
 export default memo(HeroGeometric);
+
+/* Changes and Best Practices:
+- Sourced data from usePortfolioStore and used isValidUrl for link validation.
+- Used containerPadding, containerVariants, itemVariants from utils/.
+- Accessibility: role="banner" and aria-labelledby.
+- Performance: Memoized nameParts and component.
+- Security: Validated URLs and added rel="noopener noreferrer".
+- Testing: Test image loading, button navigation, and accessibility.
+- SEO: Descriptive alt text for LazyImage.
+*/

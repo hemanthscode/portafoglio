@@ -52,15 +52,18 @@ export interface ButtonProps {
   ariaLabel?: string;
   as?: ComponentType<any>;
   disabled?: boolean;
+  loading?: boolean;
   onClick?: () => void;
   target?: string;
   rel?: string;
+  icon?: ReactNode;
 }
 
 export interface IconProps {
   icon: LucideIcon;
   className?: string;
   ariaHidden?: boolean;
+  'aria-label'?: string;
 }
 
 export interface TypographyProps {
@@ -68,12 +71,17 @@ export interface TypographyProps {
   variant?: TypographyVariant;
   className?: string;
   id?: string;
+  role?: string;
+  textColor?: string;
 }
 
 export interface LazyImageProps {
   src: string;
   alt: string;
   className?: string;
+  width?: number;
+  height?: number;
+  loading?: 'lazy' | 'eager';
 }
 
 export interface Project {
@@ -86,17 +94,28 @@ export interface Project {
   live: string;
   category: ProjectCategory;
   featured: boolean;
+  details: {
+    overview: string;
+    challenges: string[];
+    solutions: string[];
+    impact: string;
+  };
+  projectPageUrl?: string;
+  mediumPostUrl?: string;
 }
 
 export interface ProjectCardProps {
   project: Project;
   className?: string;
+  cardType?: 'image' | 'content';
+  role?: string;
 }
 
 export interface SocialLinkProps {
   href: string;
   icon: LucideIcon;
   ariaLabel: string;
+  className?: string;
 }
 
 export interface AboutCard {
@@ -108,7 +127,7 @@ export interface AboutCard {
   bgColor: string;
   textColor: string;
   size: Size;
-  icon: LucideIcon | null;
+  icon?: LucideIcon;
 }
 
 export interface AboutProps {
@@ -129,6 +148,7 @@ export interface ContactProps {
   title: string;
   description: string;
   email: string;
+  githubUrl?: string;
 }
 
 export interface FooterProps {
@@ -143,8 +163,8 @@ export interface HeroProps {
   subheadline: string;
   githubUrl: string;
   ctaText: string;
+  logo: ReactNode;
   ctaLink: string;
-  logo?: ReactNode;
 }
 
 export interface NavItem {
@@ -154,7 +174,7 @@ export interface NavItem {
 
 export interface NavbarProps {
   brandName?: string;
-  logo?: React.ReactNode; // Changed to ReactNode to support JSX elements like <img>
+  logo?: ReactNode;
 }
 
 export interface WorkProps {

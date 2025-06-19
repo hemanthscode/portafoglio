@@ -1,26 +1,24 @@
 import { memo } from 'react';
-import type { TypographyProps } from '@/utils/types';
-import { TypographyVariant } from '@/utils/types';
-
-const variantMap: Record<TypographyVariant, string> = {
-  h1: 'h1 text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight',
-  h2: 'h2 text-3xl sm:text-4xl font-bold tracking-tight',
-  h3: 'h3 text-2xl sm:text-3xl font-semibold tracking-tight',
-  p: 'p text-base sm:text-lg leading-relaxed',
-  span: 'span text-base',
-};
+import { typographyStyles } from '@/utils/styles';
+import { TypographyVariant, type TypographyProps } from '@/utils/types';
 
 const Typography = ({
   children,
   variant = TypographyVariant.P,
   className = '',
   id,
-}: TypographyProps) => {
-  const Component = variantMap[variant].split(' ')[0] as keyof JSX.IntrinsicElements;
-  const styles = variantMap[variant].replace(Component, '').trim();
+  role,
+  textColor, // New prop to allow parent-defined text color
+}: TypographyProps & { textColor?: string }) => {
+  const { component: Component, className: baseStyles } = typographyStyles[variant];
+
+  // Remove text-text or text-accent from baseStyles if textColor is provided
+  const filteredBaseStyles = textColor
+    ? baseStyles.replace(/(text-text|text-accent)/g, '').trim()
+    : baseStyles;
 
   return (
-    <Component id={id} className={`${styles} text-text ${className}`}>
+    <Component id={id} className={`${filteredBaseStyles} ${textColor || ''} ${className}`} role={role}>
       {children}
     </Component>
   );

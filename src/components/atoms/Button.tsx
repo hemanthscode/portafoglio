@@ -1,11 +1,10 @@
-import { motion } from 'framer-motion';
 import { memo, type ComponentType } from 'react';
+import { motion, type MotionProps } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { isValidUrl } from '@/utils/helpers';
 import { buttonVariants } from '@/utils/animations';
 import { buttonStyles } from '@/utils/styles';
-import { Size, type ButtonProps, Variant } from '@/utils/types';
-import type { MotionProps } from 'framer-motion';
+import { Size, Variant, type ButtonProps } from '@/utils/types';
 
 const Button = ({
   children,
@@ -17,19 +16,19 @@ const Button = ({
   ariaLabel,
   as: ComponentOverride,
   disabled = false,
+  loading = false,
   onClick,
+  target,
+  rel,
+  icon,
 }: ButtonProps) => {
-  const baseStyles = `${buttonStyles.base} transition-colors duration-200 focus:ring-primary disabled:opacity-50 disabled:cursor-not-allowed w-full sm:w-auto`;
-  const variantStyles = {
-    primary: 'bg-primary text-white hover:bg-primary-dark',
-    secondary: 'bg-secondary text-white hover:bg-secondary-dark',
-    outline: 'border-2 border-primary text-primary hover:bg-primary hover:text-white',
-  };
-  const sizeStyles = {
-    sm: 'px-2 py-1 text-xs sm:px-3 sm:py-1.5 sm:text-sm touch-action-manipulation',
-    md: 'px-3 py-1.5 text-sm sm:px-4 sm:py-2 sm:text-base touch-action-manipulation',
-    lg: 'px-4 py-2 text-base sm:px-6 sm:py-3 sm:text-lg touch-action-manipulation',
-  };
+  const combinedStyles = [
+    buttonStyles.base,
+    buttonStyles.variants[variant],
+    buttonStyles.sizes[size],
+    disabled || loading ? 'opacity-50 cursor-not-allowed' : '',
+    className,
+  ].filter(Boolean).join(' ');
 
   const Component = ComponentOverride
     ? motion<ComponentType<any>>(ComponentOverride as any)
@@ -39,27 +38,50 @@ const Button = ({
     ? motion.a
     : motion.button;
 
-  const props: MotionProps & {
+  const motionProps: MotionProps & {
     href?: string;
     to?: string;
-    type?: 'button';
+    type?: 'button' | 'submit' | 'reset';
     onClick?: () => void;
     disabled?: boolean;
     className: string;
     'aria-label'?: string;
+    'aria-disabled'?: boolean;
+    target?: string;
+    rel?: string;
   } = {
-    ...(href ? { href, target: '_blank', rel: 'noopener noreferrer' } : {}),
+    ...(href && isValidUrl(href) ? { href, target: target || '_blank', rel: rel || 'noopener noreferrer' } : {}),
     ...(to ? { to } : {}),
     ...(!href && !to ? { type: 'button', onClick } : {}),
-    disabled,
-    className: `${baseStyles} ${variantStyles[variant]} ${sizeStyles[size]} ${className}`,
+    disabled: disabled || loading,
+    className: combinedStyles,
     'aria-label': ariaLabel || (typeof children === 'string' ? children : undefined),
+    'aria-disabled': disabled || loading,
     variants: buttonVariants,
-    whileHover: disabled ? undefined : 'hover',
-    whileTap: disabled ? undefined : 'tap',
+    whileHover: disabled || loading ? undefined : 'hover',
+    whileTap: disabled || loading ? undefined : 'tap',
   };
 
-  return <Component {...props}>{children}</Component>;
+  return (
+    <Component {...motionProps}>
+      {loading && (
+        <span className="mr-2 animate-spin" aria-hidden="true">
+          ⌀
+        </span>
+      )}
+      {icon && <span className="mr-2">{icon}</span>}
+      {children}
+    </Component>
+  );
 };
 
 export default memo(Button);
+
+/* Changes and Best Practices:
+- Ensured buttonStyles and buttonVariants are sourced from utils/.
+- Used isValidUrl from helpers.ts for href validation.
+- Accessibility: aria-label fallback and aria-disabled for disabled/loading states.
+- Performance: Memoized component to prevent unnecessary re-renders.
+- Responsiveness: touch-action-manipulation in buttonStyles.sizes ensures mobile performance.
+- Testing: Test click handlers, disabled/loading states, and accessibility.
+*/
