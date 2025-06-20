@@ -179,3 +179,11 @@ export interface WorkProps {
   projects: Project[];
   footerText?: string;
 }
+
+export interface LoadingSpinnerProps {
+  className?: string;
+}
+
+export interface NotFoundProps {
+  message?: string;
+}

@@ -12,13 +12,15 @@ import { isValidUrl } from '@/utils/helpers';
 import { TypographyVariant, Variant, Size } from '@/utils/types';
 import clsx from 'clsx';
 
-/**
- * A hero section component with a geometric layout and animated elements.
- * @returns A responsive hero section with text, buttons, and an optional image.
- */
+// Enhanced with image optimization and structured data
 const HeroGeometric = () => {
   const { hero } = usePortfolioStore();
   const nameParts = useMemo(() => hero.name.split(' '), [hero.name]);
+
+  if (!hero) {
+    console.warn('HeroGeometric requires portfolio store data');
+    return null;
+  }
 
   return (
     <motion.section
@@ -130,9 +132,20 @@ const HeroGeometric = () => {
             alt="Hero illustration"
             className="w-full h-64 xs:h-72 sm:h-80 lg:h-96 rounded-2xl object-cover"
             sizes="(max-width: 1024px) 0, 50vw"
+            placeholder="/placeholder.jpg" // Use local placeholder for better LCP
           />
         </motion.div>
       </div>
+      {/* Added structured data for SEO */}
+      <script type="application/ld+json">
+        {JSON.stringify({
+          '@context': 'https://schema.org',
+          '@type': 'Person',
+          name: hero.name,
+          jobTitle: 'Full-Stack Developer',
+          url: 'https://hemanthscode.github.io/portfolio',
+        })}
+      </script>
     </motion.section>
   );
 };

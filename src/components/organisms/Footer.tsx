@@ -10,12 +10,14 @@ import { footerStyles } from '@/utils/styles';
 import { TypographyVariant } from '@/utils/types';
 import clsx from 'clsx';
 
-/**
- * A footer component displaying social links and copyright information.
- * @returns A centered footer with animated social links.
- */
+// Enhanced with fallback for missing URLs
 const Footer = () => {
   const { footer } = usePortfolioStore();
+
+  if (!footer) {
+    console.warn('Footer requires portfolio store data');
+    return null;
+  }
 
   return (
     <motion.footer
@@ -46,6 +48,14 @@ const Footer = () => {
               icon={Linkedin}
               ariaLabel="Visit my LinkedIn profile"
             />
+          )}
+          {!isValidUrl(footer.githubUrl) && !isValidUrl(footer.linkedinUrl) && (
+            <Typography
+              variant={TypographyVariant.Span}
+              className="text-xs xs:text-sm text-accent"
+            >
+              No social links available.
+            </Typography>
           )}
         </motion.div>
         <Typography

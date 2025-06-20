@@ -1,11 +1,10 @@
-// vite.config.ts
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import * as path from 'path';
 
 export default defineConfig({
   plugins: [react()],
-  base: '/portfolio/', // Ensure trailing slash for consistency
+  base: '/portfolio/',
   resolve: {
     alias: {
       '@': path.resolve(process.cwd(), './src'),
@@ -13,8 +12,8 @@ export default defineConfig({
   },
   build: {
     outDir: 'dist',
-    minify: 'esbuild',
-    sourcemap: false,
+    minify: 'terser',
+    sourcemap: true,
     target: 'es2022',
     rollupOptions: {
       output: {
@@ -23,7 +22,6 @@ export default defineConfig({
           animations: ['framer-motion'],
           icons: ['lucide-react'],
         },
-        // Ensure assets are correctly referenced
         assetFileNames: 'assets/[name]-[hash][extname]',
         chunkFileNames: 'assets/[name]-[hash].js',
         entryFileNames: 'assets/[name]-[hash].js',

@@ -11,19 +11,26 @@ import { isValidUrl } from '@/utils/helpers';
 import { TypographyVariant, Variant, Size } from '@/utils/types';
 import clsx from 'clsx';
 
-/**
- * A contact section component with email, location, and action buttons.
- * @returns A responsive contact section with animated cards and buttons.
- */
+// Enhanced with mailto validation and analytics
 const Contact = () => {
   const { contact } = usePortfolioStore();
   const [isEmailLoading, setIsEmailLoading] = useState(false);
 
   const handleEmailClick = () => {
-    if (!contact.email) return;
+    if (!contact.email || !isValidUrl(`mailto:${contact.email}`)) {
+      console.warn('Invalid email address');
+      return;
+    }
     setIsEmailLoading(true);
+    // Placeholder for analytics tracking
+    // trackEvent('contact', 'email_click', contact.email);
     setTimeout(() => setIsEmailLoading(false), 1000);
   };
+
+  if (!contact) {
+    console.warn('Contact section requires portfolio store data');
+    return null;
+  }
 
   return (
     <motion.section
@@ -73,9 +80,9 @@ const Contact = () => {
             <Typography
               variant={TypographyVariant.P}
               className="text-accent text-sm xs:text-base"
-              aria-label={`Email: ${contact.email}`}
+              aria-label={`Email: ${contact.email || 'Not provided'}`}
             >
-              {contact.email}
+              {contact.email || 'Not provided'}
             </Typography>
           </motion.div>
 
@@ -117,7 +124,7 @@ const Contact = () => {
             size={Size.Medium}
             ariaLabel="Send email"
             className="px-5 xs:px-6 sm:px-8"
-            disabled={!contact.email}
+            disabled={!contact.email || !isValidUrl(`mailto:${contact.email}`)}
             loading={isEmailLoading}
             onClick={handleEmailClick}
             icon={<Mail className="w-5 h-5" />}

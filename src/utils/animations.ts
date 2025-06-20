@@ -1,5 +1,12 @@
 import type { Variants } from 'framer-motion';
 
+const prefersReducedMotion = typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+const disableAnimations: Variants = {
+  hover: { scale: 1, y: 0, transition: { duration: 0 } },
+  tap: { scale: 1, transition: { duration: 0 } },
+};
+
 export const containerVariants: Variants = {
   hidden: { opacity: 0 },
   visible: {
@@ -10,6 +17,7 @@ export const containerVariants: Variants = {
       ease: [0.25, 0.1, 0.25, 1],
     },
   },
+  exit: { opacity: 0, transition: { duration: 0.3 } },
 };
 
 export const itemVariants: Variants = {
@@ -19,6 +27,7 @@ export const itemVariants: Variants = {
     y: 0,
     transition: { duration: 0.4, ease: [0.25, 0.1, 0.25, 1] },
   },
+  exit: { opacity: 0, y: 20, transition: { duration: 0.3 } },
 };
 
 export const menuVariants: Variants = {
@@ -28,6 +37,7 @@ export const menuVariants: Variants = {
     x: 0,
     transition: { duration: 0.3, ease: [0.4, 0, 0.2, 1] },
   },
+  exit: { opacity: 0, x: '-100%', transition: { duration: 0.3 } },
 };
 
 export const buttonVariants: Variants = {
@@ -52,6 +62,7 @@ export const cardVariants: Variants = {
     transition: { type: 'spring', stiffness: 300, damping: 20 },
   },
   tap: { scale: 0.98 },
+  exit: { opacity: 0, y: 20, transition: { duration: 0.3 } },
 };
 
 export const socialLinkVariants: Variants = {
@@ -75,6 +86,7 @@ export const heroCardVariants: Variants = {
     transition: { type: 'spring', stiffness: 300, damping: 20 },
   },
   tap: { scale: 0.98 },
+  exit: { opacity: 0, y: 50, transition: { duration: 0.3 } },
 };
 
 export const overlayVariants: Variants = {
@@ -83,6 +95,7 @@ export const overlayVariants: Variants = {
     opacity: 1,
     transition: { duration: 0.3, ease: [0.4, 0, 0.2, 1] },
   },
+  exit: { opacity: 0, transition: { duration: 0.3 } },
 };
 
 export const badgeVariants: Variants = {
@@ -99,13 +112,11 @@ export const detailVariants: Variants = {
     y: 0,
     transition: { duration: 0.6, ease: [0.25, 0.1, 0.25, 1], staggerChildren: 0.2 },
   },
+  exit: { opacity: 0, y: 30, transition: { duration: 0.3 } },
 };
 
-// Respect prefers-reduced-motion globally
-const prefersReducedMotion = typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
 if (prefersReducedMotion) {
-  const variants = [
+  const variants: Variants[] = [
     buttonVariants,
     cardVariants,
     socialLinkVariants,
@@ -114,8 +125,5 @@ if (prefersReducedMotion) {
     menuVariants,
     badgeVariants,
   ];
-  variants.forEach((variant) => {
-    variant.hover = { scale: 1, y: 0, transition: { duration: 0 } };
-    variant.tap = { scale: 1, transition: { duration: 0 } };
-  });
+  variants.forEach((variant) => Object.assign(variant, disableAnimations));
 }

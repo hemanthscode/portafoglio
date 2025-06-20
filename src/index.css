@@ -28,7 +28,8 @@
 
   /* Scrollbar customization */
   ::-webkit-scrollbar {
-    display: none;
+    width: 8px;
+    height: 8px;
   }
   ::-webkit-scrollbar-track {
     @apply bg-gray-100;
@@ -38,6 +39,14 @@
   }
   ::-webkit-scrollbar-thumb:hover {
     @apply bg-primary-dark;
+  }
+
+  /* Respect prefers-reduced-motion */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation: none !important;
+      transition: none !important;
+    }
   }
 }
 

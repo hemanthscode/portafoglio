@@ -7,11 +7,7 @@ import { buttonVariants } from '@/utils/animations';
 import { buttonStyles } from '@/utils/styles';
 import { Size, Variant, type ButtonProps } from '@/utils/types';
 
-/**
- * A customizable, accessible button component supporting links, custom components, and animations.
- * @param props - Button properties including variant, size, and accessibility attributes.
- * @returns A motion-enabled button or link with loading and disabled states.
- */
+// Enhanced with stricter prop validation and role for custom components
 const Button = ({
   children,
   href,
@@ -28,6 +24,12 @@ const Button = ({
   rel,
   icon,
 }: ButtonProps) => {
+  // Ensure children is defined to prevent empty buttons
+  if (!children) {
+    console.warn('Button component requires children');
+    return null;
+  }
+
   const classes = clsx(
     buttonStyles.base,
     buttonStyles.variants[variant],
@@ -42,6 +44,7 @@ const Button = ({
     variants: buttonVariants,
     whileHover: disabled || loading ? undefined : 'hover',
     whileTap: disabled || loading ? undefined : 'tap',
+    role: ComponentOverride ? 'button' : undefined, // Added for custom components
   };
 
   const renderContent = () => (
@@ -62,10 +65,10 @@ const Button = ({
 
   if (ComponentOverride) {
     const MotionComponent = motion(ComponentOverride);
-    return <MotionComponent {...commonProps}>{renderContent()}</MotionComponent>;
+    return <MotionComponent {...commonProps} onClick={onClick}>{renderContent()}</MotionComponent>;
   }
 
-  if (to) {
+  if (to && isValidUrl(to)) {
     const MotionLink = motion(Link);
     return (
       <MotionLink {...commonProps} to={to}>
@@ -82,6 +85,7 @@ const Button = ({
         href={href}
         target={target || (isExternal ? '_blank' : undefined)}
         rel={isExternal ? rel || 'noopener noreferrer' : rel}
+        onClick={onClick}
       >
         {renderContent()}
       </motion.a>

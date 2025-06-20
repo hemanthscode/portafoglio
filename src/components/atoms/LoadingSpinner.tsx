@@ -15,6 +15,7 @@ const sizeStyles = {
   lg: 'w-12 h-12',
 };
 
+// Enhanced with aria-live for screen readers
 const LoadingSpinner = ({ className, size = 'md', ariaLabel = 'Loading content' }: LoadingSpinnerProps) => {
   return (
     <motion.div
@@ -25,6 +26,7 @@ const LoadingSpinner = ({ className, size = 'md', ariaLabel = 'Loading content' 
       transition={{ duration: 0.3 }}
       role="status"
       aria-label={ariaLabel}
+      aria-live="polite"
     >
       <motion.div
         animate={{ rotate: 360 }}

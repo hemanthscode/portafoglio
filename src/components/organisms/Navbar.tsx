@@ -1,4 +1,4 @@
-import { memo, useState, useEffect, useRef, useCallback } from 'react';
+import { memo, useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import Icon from '@/components/atoms/Icon';
@@ -11,6 +11,7 @@ import { navbarStyles } from '@/utils/styles';
 import { TypographyVariant, NavbarProps } from '@/utils/types';
 import clsx from 'clsx';
 
+// Enhanced with memoized nav items and double-render prevention
 const Navbar = ({ logo, brandName = 'Hemanth Sayimpu' }: NavbarProps) => {
   const { navItems } = usePortfolioStore();
   const [isOpen, setIsOpen] = useState(false);
@@ -75,38 +76,12 @@ const Navbar = ({ logo, brandName = 'Hemanth Sayimpu' }: NavbarProps) => {
     };
   }, [isOpen, closeMenu]);
 
-  // Simple normalizePath assumption: removes leading/trailing slashes
-  const normalizePath = (path: string) => path.replace(/^\/+|\/+$/g, '');
-
-  const normalizedPathname = normalizePath(pathname);
-
-  const LogoComponent = logo ? (
-    <motion.div
-      onClick={handleLogoClick}
-      onKeyDown={(e) => e.key === 'Enter' && handleLogoClick(e)}
-      className="cursor-pointer"
-      whileTap={{ scale: 0.95 }}
-      role="button"
-      aria-label="Navigate to homepage"
-      tabIndex={0}
-    >
-      {logo}
-    </motion.div>
-  ) : (
-    <motion.button
-      onClick={handleLogoClick}
-      onKeyDown={(e) => e.key === 'Enter' && handleLogoClick(e)}
-      className={navbarStyles.logo}
-      whileTap={{ scale: 0.95 }}
-      aria-label="Navigate to homepage"
-    >
-      <Typography variant={TypographyVariant.Span}>{brandName}</Typography>
-    </motion.button>
-  );
+  const normalizedPathname = pathname.replace(/^\/portfolio/, '').replace(/^\/+|\/+$/g, '');
 
   const NavLink = memo(
     ({ item, isMobile = false }: { item: { label: string; href: string }; isMobile?: boolean }) => {
-      const isActive = normalizedPathname === normalizePath(item.href);
+      const normalizedHref = item.href.replace(/^\/portfolio/, '').replace(/^\/+|\/+$/g, '');
+      const isActive = normalizedPathname === normalizedHref;
       const classes = clsx(
         navbarStyles.link,
         isActive ? 'text-primary' : 'text-gray-700',
@@ -143,6 +118,8 @@ const Navbar = ({ logo, brandName = 'Hemanth Sayimpu' }: NavbarProps) => {
     }
   );
 
+  const memoizedNavItems = useMemo(() => navItems, [navItems]);
+
   return (
     <>
       <motion.nav
@@ -154,9 +131,33 @@ const Navbar = ({ logo, brandName = 'Hemanth Sayimpu' }: NavbarProps) => {
         aria-label="Main navigation"
       >
         <div className={navbarStyles.container}>
-          <div className="flex-shrink-0">{LogoComponent}</div>
+          <div className="flex-shrink-0">
+            {logo ? (
+              <motion.div
+                onClick={handleLogoClick}
+                onKeyDown={(e) => e.key === 'Enter' && handleLogoClick(e)}
+                className="cursor-pointer"
+                whileTap={{ scale: 0.95 }}
+                role="button"
+                aria-label="Navigate to homepage"
+                tabIndex={0}
+              >
+                {logo}
+              </motion.div>
+            ) : (
+              <motion.button
+                onClick={handleLogoClick}
+                onKeyDown={(e) => e.key === 'Enter' && handleLogoClick(e)}
+                className={navbarStyles.logo}
+                whileTap={{ scale: 0.95 }}
+                aria-label="Navigate to homepage"
+              >
+                <Typography variant={TypographyVariant.Span}>{brandName}</Typography>
+              </motion.button>
+            )}
+          </div>
           <div className={navbarStyles.desktopMenu}>
-            {navItems.map((item) => (
+            {memoizedNavItems.map((item) => (
               <NavLink key={item.href} item={item} />
             ))}
           </div>
@@ -185,7 +186,7 @@ const Navbar = ({ logo, brandName = 'Hemanth Sayimpu' }: NavbarProps) => {
             tabIndex={-1}
           >
             <div className="flex flex-col items-center gap-8 xs:gap-10">
-              {navItems.map((item, index) => (
+              {memoizedNavItems.map((item, index) => (
                 <motion.div
                   key={item.href}
                   initial={{ opacity: 0, y: 20 }}

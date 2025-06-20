@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "type": "module",
-  "homepage": "https://hemanthscode.github.io/portfolio",
+  "homepage": "https://hemanthscode.github.io/portfolio/",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
@@ -24,6 +24,8 @@
     "react-dom": "^18.3.1",
     "react-helmet-async": "^2.0.5",
     "react-router-dom": "^6.26.2",
+    "vite-plugin-checker": "^0.9.3",
+    "vite-tsconfig-paths": "^5.1.4",
     "zustand": "^4.5.5"
   },
   "devDependencies": {

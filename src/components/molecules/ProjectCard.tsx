@@ -17,8 +17,14 @@ interface ProjectCardProps {
   className?: string;
 }
 
+// Enhanced with focus management and stricter URL validation
 const ProjectCard = ({ project, cardType, className }: ProjectCardProps) => {
   const isImageCard = useMemo(() => cardType === 'image', [cardType]);
+
+  if (!project) {
+    console.warn('ProjectCard requires a valid project prop');
+    return null;
+  }
 
   return (
     <motion.div
@@ -30,6 +36,7 @@ const ProjectCard = ({ project, cardType, className }: ProjectCardProps) => {
       role="listitem"
       tabIndex={0}
       aria-labelledby={`project-card-${project.id}`}
+      onKeyDown={(e) => e.key === 'Enter' && e.currentTarget.querySelector('a')?.click()} // Added for keyboard navigation
     >
       {isImageCard && project.image && (
         <Link to={project.projectPageUrl} aria-label={`View details of ${project.title}`}>
@@ -66,7 +73,7 @@ const ProjectCard = ({ project, cardType, className }: ProjectCardProps) => {
             <span className={projectCardStyles.moreTag}>+{project.tech.length - 3}</span>
           )}
         </div>
-        <div className="flex flex-row flex-wrap gap-2 mt-auto">
+        <div className={projectCardStyles.buttonContainer}>
           {isValidUrl(project.githubUrl) && (
             <Button
               href={project.githubUrl}

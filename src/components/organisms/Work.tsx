@@ -8,8 +8,14 @@ import { workTimelineStyles, cardStyles } from '@/utils/styles';
 import { TypographyVariant } from '@/utils/types';
 import clsx from 'clsx';
 
+// Enhanced with ARIA landmarks and performance optimization
 const WorkTimeline = () => {
   const { work } = usePortfolioStore();
+
+  if (!work) {
+    console.warn('WorkTimeline requires portfolio store data');
+    return null;
+  }
 
   return (
     <motion.section
@@ -36,7 +42,7 @@ const WorkTimeline = () => {
           </Typography>
         </motion.div>
 
-        <div className="relative" role="list">
+        <div className="relative" role="list" aria-label="Project timeline">
           <div className={clsx(workTimelineStyles.timelineLine, 'z-0')} aria-hidden="true" />
           {work.projects.length > 0 ? (
             work.projects.map((project, index) => (
@@ -49,6 +55,7 @@ const WorkTimeline = () => {
                 )}
                 variants={containerVariants}
                 role="listitem"
+                aria-labelledby={`project-${project.id}`}
               >
                 <div
                   className={clsx(

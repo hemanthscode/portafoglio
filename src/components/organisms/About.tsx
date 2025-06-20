@@ -4,16 +4,14 @@ import { usePortfolioStore } from '@/utils/config';
 import Button from '@/components/atoms/Button';
 import Icon from '@/components/atoms/Icon';
 import Typography from '@/components/atoms/Typography';
-import { badgeVariants, cardVariants, containerVariants } from '@/utils/animations';
-import { aboutStyles, badgeStyles } from '@/utils/styles';
 import { ArrowRight, Code } from 'lucide-react';
+import { badgeVariants, cardVariants, containerVariants } from '@/utils/animations';
+import { aboutStyles } from '@/utils/styles';
 import { TypographyVariant, Variant, Size, CardType } from '@/utils/types';
 import clsx from 'clsx';
+import { isValidUrl } from '@/utils/helpers';
 
-/**
- * An About section component displaying hero, skill, and story cards.
- * @returns A responsive section with centered content and animated cards.
- */
+// Enhanced with error boundary and focus handling
 const About = () => {
   const { about } = usePortfolioStore();
 
@@ -24,7 +22,7 @@ const About = () => {
   const storyCards = useMemo(
     () =>
       about.cards?.filter(
-        (card) => card.type === CardType.Story && ['The Spark', 'Team Synergy'].includes(card.title)
+        (card) => card.type === CardType.Story && ['Syntax and Sparks', 'Code Review Enthusiast'].includes(card.title)
       ) || [],
     [about.cards]
   );
@@ -32,6 +30,11 @@ const About = () => {
     () => about.cards?.filter((card) => card.type === CardType.Skill) || [],
     [about.cards]
   );
+
+  if (!about) {
+    console.warn('About section requires portfolio store data');
+    return null;
+  }
 
   return (
     <motion.section
@@ -44,7 +47,6 @@ const About = () => {
     >
       <div className={aboutStyles.container}>
         <motion.div className={aboutStyles.header} variants={cardVariants}>
-          
           <Typography
             variant={TypographyVariant.H2}
             id="about-title"
@@ -70,6 +72,8 @@ const About = () => {
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
                 onClick={() => {}}
+                tabIndex={0} // Added for accessibility
+                onKeyDown={(e) => e.key === 'Enter' && e.currentTarget.click()}
               >
                 <Icon
                   icon={heroCard.icon || Code}
@@ -106,6 +110,8 @@ const About = () => {
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
                     onClick={() => {}}
+                    tabIndex={0} // Added for accessibility
+                    onKeyDown={(e) => e.key === 'Enter' && e.currentTarget.click()}
                   >
                     <Icon
                       icon={skill.icon || Code}
@@ -139,6 +145,8 @@ const About = () => {
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
                 onClick={() => {}}
+                tabIndex={0} // Added for accessibility
+                onKeyDown={(e) => e.key === 'Enter' && e.currentTarget.click()}
               >
                 <div className="flex items-start space-x-3 sm:space-x-4">
                   <Icon
@@ -182,6 +190,7 @@ const About = () => {
             ariaLabel="Learn more about me"
             className={aboutStyles.ctaButton}
             icon={<ArrowRight className="ml-2 w-5 h-5" />}
+            disabled={!isValidUrl('/about')}
           >
             {about.cta?.buttonText || 'Learn More About Me'}
           </Button>

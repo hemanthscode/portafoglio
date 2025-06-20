@@ -1,12 +1,13 @@
 import { memo } from 'react';
 import type { IconProps } from '@/utils/types';
 
-/**
- * A reusable icon component for rendering Lucide icons with accessibility support.
- * @param props - Icon properties including the icon component and ARIA attributes.
- * @returns An accessible icon with customizable styling.
- */
+// Enhanced with stricter prop types and default aria-hidden
 const Icon = ({ icon: IconComponent, className, ariaHidden = true, ariaLabel }: IconProps) => {
+  if (!IconComponent) {
+    console.warn('Icon component requires a valid Lucide icon');
+    return null;
+  }
+
   return (
     <IconComponent
       className={className}
