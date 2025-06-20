@@ -23,13 +23,7 @@ function RouteErrorBoundary({ children }: { children: React.ReactNode }) {
 function App() {
   return (
     <HelmetProvider>
-      <BrowserRouter
-        basename="/portfolio/"
-        future={{
-          v7_startTransition: true,
-          v7_relativeSplatPath: true,
-        }}
-      >
+      <BrowserRouter basename="/portfolio">
         <div className="flex flex-col min-h-screen bg-background">
           <Navbar brandName="Hemanth" />
           <main className="flex-grow">
