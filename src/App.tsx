@@ -1,5 +1,5 @@
 import { Suspense, lazy } from "react";
-import { HashRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { HelmetProvider } from "react-helmet-async";
 import Navbar from "@/components/organisms/Navbar";
 import Footer from "@/components/organisms/Footer";
@@ -27,7 +27,7 @@ function RouteErrorBoundary({ children }: { children: React.ReactNode }) {
 function App() {
   return (
     <HelmetProvider>
-      <HashRouter basename="/portfolio">
+      <BrowserRouter basename="/portfolio">
         <div className="flex flex-col min-h-screen bg-background">
           <Navbar brandName="Hemanth" />
           <main className="flex-grow">
@@ -88,7 +88,7 @@ function App() {
           </main>
           <Footer />
         </div>
-      </HashRouter>
+      </BrowserRouter>
     </HelmetProvider>
   );
 }
