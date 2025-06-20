@@ -19,7 +19,7 @@ const App = () => {
   return (
     <HelmetProvider>
       <BrowserRouter
-        basename="/portfolio/"
+        basename="/portfolio"
         future={{
           v7_startTransition: true,
           v7_relativeSplatPath: true,
