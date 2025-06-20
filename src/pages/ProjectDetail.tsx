@@ -20,13 +20,21 @@ const ProjectDetail = () => {
 
   if (!project) {
     return (
-      <div className="flex justify-center items-center h-screen">
+      <div className="flex justify-center items-center h-screen bg-background" role="alert">
         <Typography variant={TypographyVariant.H2} className={projectDetailStyles.errorTitle}>
           Project Not Found
         </Typography>
       </div>
     );
   }
+
+  // Normalize image path to account for Vite base path '/portfolio/'
+  const basePath = '/portfolio/';
+  const normalizedImagePath = project.image.startsWith('../../public/')
+    ? `${basePath}${project.image.replace('../../public/', '')}`
+    : project.image.startsWith('/')
+    ? `${basePath}${project.image.slice(1)}`
+    : project.image;
 
   return (
     <>
@@ -37,8 +45,11 @@ const ProjectDetail = () => {
         <meta property="og:title" content={`${project.title} | Hemanth Sayimpu`} />
         <meta property="og:description" content={project.description} />
         <meta property="og:type" content="website" />
-        <meta property="og:url" content={`https://hemanth.codes${project.projectPageUrl}`} />
-        <meta property="og:image" content={project.image} />
+        <meta
+          property="og:url"
+          content={`https://hemanth.codes${basePath}${project.projectPageUrl}`}
+        />
+        <meta property="og:image" content={normalizedImagePath} />
       </Helmet>
       <motion.div
         className={clsx(projectDetailStyles.base, 'bg-background')}
@@ -60,10 +71,11 @@ const ProjectDetail = () => {
           </Button>
           <div className={projectDetailStyles.card}>
             <LazyImage
-              src={project.image}
+              src={normalizedImagePath}
               alt={`${project.title} preview`}
               className={projectDetailStyles.image}
-              sizes="(max-width: 640px) 100vw, 800px"
+              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 800px"
+              placeholder="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="
             />
             <div className={projectDetailStyles.cardContent}>
               <div className={projectDetailStyles.category}>
@@ -80,12 +92,15 @@ const ProjectDetail = () => {
               >
                 {project.title}
               </Typography>
-              <Typography variant={TypographyVariant.P} className={projectDetailStyles.description}>
+              <Typography
+                variant={TypographyVariant.P}
+                className={projectDetailStyles.description}
+              >
                 {project.description}
               </Typography>
               <div className={projectDetailStyles.techTags}>
-                {project.tech.map((tech) => (
-                  <span key={tech} className={projectDetailStyles.techTags}>
+                {project.tech.map((tech, index) => (
+                  <span key={`${tech}-${index}`} className={projectDetailStyles.techTags}>
                     {tech}
                   </span>
                 ))}
@@ -114,7 +129,7 @@ const ProjectDetail = () => {
                   </Typography>
                   <ul className={projectDetailStyles.list}>
                     {project.details.challenges.map((challenge, index) => (
-                      <li key={index} className={projectDetailStyles.listItem}>
+                      <li key={`challenge-${index}`} className={projectDetailStyles.listItem}>
                         <Typography variant={TypographyVariant.P}>{challenge}</Typography>
                       </li>
                     ))}
@@ -129,7 +144,7 @@ const ProjectDetail = () => {
                   </Typography>
                   <ul className={projectDetailStyles.list}>
                     {project.details.solutions.map((solution, index) => (
-                      <li key={index} className={projectDetailStyles.listItem}>
+                      <li key={`solution-${index}`} className={projectDetailStyles.listItem}>
                         <Typography variant={TypographyVariant.P}>{solution}</Typography>
                       </li>
                     ))}
