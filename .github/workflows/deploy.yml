@@ -11,7 +11,7 @@ permissions:
 
 jobs:
   deploy:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -32,10 +32,7 @@ jobs:
             project-npm-${{ runner.os }}-
 
       - name: Install dependencies
-        run: |
-          if [ "${{ steps.cache-npm.outputs.cache-hit }}" != "true" ]; then
-            npm ci || (npm install && npm cache clean --force)
-          fi
+        run: npm ci
 
       - name: Save cache
         if: steps.cache-npm.outputs.cache-hit != 'true'
@@ -46,6 +43,8 @@ jobs:
 
       - name: Build project
         run: npm run build
+        env:
+          CI: true
 
       - name: Verify build output
         run: |
