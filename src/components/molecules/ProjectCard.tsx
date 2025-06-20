@@ -1,28 +1,28 @@
-import { memo, useMemo } from 'react';
-import { motion } from 'framer-motion';
-import { Link } from 'react-router-dom';
-import { Github, ExternalLink, Book } from 'lucide-react';
-import Button from '@/components/atoms/Button';
-import LazyImage from '@/components/atoms/LazyImage';
-import Typography from '@/components/atoms/Typography';
-import { isValidUrl } from '@/utils/helpers';
-import { cardVariants } from '@/utils/animations';
-import { projectCardStyles, cardStyles } from '@/utils/styles';
-import { Project, Size, Variant, TypographyVariant } from '@/utils/types';
-import clsx from 'clsx';
+import { memo, useMemo } from "react";
+import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
+import { Github, ExternalLink, Book } from "lucide-react";
+import Button from "@/components/atoms/Button";
+import LazyImage from "@/components/atoms/LazyImage";
+import Typography from "@/components/atoms/Typography";
+import { isValidUrl } from "@/utils/helpers";
+import { cardVariants } from "@/utils/animations";
+import { projectCardStyles, cardStyles } from "@/utils/styles";
+import { Project, Size, Variant, TypographyVariant } from "@/utils/types";
+import clsx from "clsx";
 
 interface ProjectCardProps {
   project: Project;
-  cardType: 'image' | 'content';
+  cardType: "image" | "content";
   className?: string;
 }
 
 // Enhanced with focus management and stricter URL validation
 const ProjectCard = ({ project, cardType, className }: ProjectCardProps) => {
-  const isImageCard = useMemo(() => cardType === 'image', [cardType]);
+  const isImageCard = useMemo(() => cardType === "image", [cardType]);
 
   if (!project) {
-    console.warn('ProjectCard requires a valid project prop');
+    console.warn("ProjectCard requires a valid project prop");
     return null;
   }
 
@@ -36,10 +36,15 @@ const ProjectCard = ({ project, cardType, className }: ProjectCardProps) => {
       role="listitem"
       tabIndex={0}
       aria-labelledby={`project-card-${project.id}`}
-      onKeyDown={(e) => e.key === 'Enter' && e.currentTarget.querySelector('a')?.click()} // Added for keyboard navigation
+      onKeyDown={(e) =>
+        e.key === "Enter" && e.currentTarget.querySelector("a")?.click()
+      } // Added for keyboard navigation
     >
       {isImageCard && project.image && (
-        <Link to={project.projectPageUrl} aria-label={`View details of ${project.title}`}>
+        <Link
+          to={project.projectPageUrl}
+          aria-label={`View details of ${project.title}`}
+        >
           <LazyImage
             src={project.image}
             alt={`${project.title} preview`}
@@ -56,21 +61,33 @@ const ProjectCard = ({ project, cardType, className }: ProjectCardProps) => {
           role="heading"
           aria-level={3}
         >
-          <Link to={project.projectPageUrl} className={projectCardStyles.titleLink}>
+          <Link
+            to={project.projectPageUrl}
+            className={projectCardStyles.titleLink}
+          >
             {project.title}
           </Link>
         </Typography>
-        <Typography variant={TypographyVariant.P} className={projectCardStyles.description}>
+        <Typography
+          variant={TypographyVariant.P}
+          className={projectCardStyles.description}
+        >
           {project.description}
         </Typography>
         <div className={projectCardStyles.techTags}>
           {project.tech.slice(0, 3).map((tech) => (
-            <span key={tech} className={projectCardStyles.techTag} aria-label={`Technology: ${tech}`}>
+            <span
+              key={tech}
+              className={projectCardStyles.techTag}
+              aria-label={`Technology: ${tech}`}
+            >
               {tech}
             </span>
           ))}
           {project.tech.length > 3 && (
-            <span className={projectCardStyles.moreTag}>+{project.tech.length - 3}</span>
+            <span className={projectCardStyles.moreTag}>
+              +{project.tech.length - 3}
+            </span>
           )}
         </div>
         <div className={projectCardStyles.buttonContainer}>

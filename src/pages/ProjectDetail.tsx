@@ -1,27 +1,33 @@
-import { memo } from 'react';
-import { motion } from 'framer-motion';
-import { useParams } from 'react-router-dom';
-import { usePortfolioStore } from '@/utils/config';
-import Button from '@/components/atoms/Button';
-import LazyImage from '@/components/atoms/LazyImage';
-import Typography from '@/components/atoms/Typography';
-import { containerVariants } from '@/utils/animations';
-import { projectDetailStyles } from '@/utils/styles';
-import { Helmet } from 'react-helmet-async';
-import { Github, Book, ExternalLink } from 'lucide-react';
-import { isValidUrl } from '@/utils/helpers';
-import { TypographyVariant, Variant, Size } from '@/utils/types';
-import clsx from 'clsx';
+import { memo } from "react";
+import { motion } from "framer-motion";
+import { useParams } from "react-router-dom";
+import { usePortfolioStore } from "@/utils/config";
+import Button from "@/components/atoms/Button";
+import LazyImage from "@/components/atoms/LazyImage";
+import Typography from "@/components/atoms/Typography";
+import { containerVariants } from "@/utils/animations";
+import { projectDetailStyles } from "@/utils/styles";
+import { Helmet } from "react-helmet-async";
+import { Github, Book, ExternalLink } from "lucide-react";
+import { isValidUrl } from "@/utils/helpers";
+import { TypographyVariant, Variant, Size } from "@/utils/types";
+import clsx from "clsx";
 
 const ProjectDetail = () => {
   const { id } = useParams<{ id: string }>();
   const { work } = usePortfolioStore();
-  const project = work.projects.find((p) => p.id === parseInt(id || '0'));
+  const project = work.projects.find((p) => p.id === parseInt(id || "0"));
 
   if (!project) {
     return (
-      <div className="flex justify-center items-center h-screen bg-background" role="alert">
-        <Typography variant={TypographyVariant.H2} className={projectDetailStyles.errorTitle}>
+      <div
+        className="flex justify-center items-center h-screen bg-background"
+        role="alert"
+      >
+        <Typography
+          variant={TypographyVariant.H2}
+          className={projectDetailStyles.errorTitle}
+        >
           Project Not Found
         </Typography>
       </div>
@@ -29,20 +35,23 @@ const ProjectDetail = () => {
   }
 
   // Normalize image path to account for Vite base path '/portfolio/'
-  const basePath = '/portfolio/';
-  const normalizedImagePath = project.image.startsWith('../../public/')
-    ? `${basePath}${project.image.replace('../../public/', '')}`
-    : project.image.startsWith('/')
-    ? `${basePath}${project.image.slice(1)}`
-    : project.image;
+  const basePath = "/portfolio/";
+  const normalizedImagePath = project.image.startsWith("../../public/")
+    ? `${basePath}${project.image.replace("../../public/", "")}`
+    : project.image.startsWith("/")
+      ? `${basePath}${project.image.slice(1)}`
+      : project.image;
 
   return (
     <>
       <Helmet>
         <title>{`${project.title} | Hemanth Sayimpu`}</title>
         <meta name="description" content={project.description} />
-        <meta name="keywords" content={project.tech.join(', ')} />
-        <meta property="og:title" content={`${project.title} | Hemanth Sayimpu`} />
+        <meta name="keywords" content={project.tech.join(", ")} />
+        <meta
+          property="og:title"
+          content={`${project.title} | Hemanth Sayimpu`}
+        />
         <meta property="og:description" content={project.description} />
         <meta property="og:type" content="website" />
         <meta
@@ -52,7 +61,7 @@ const ProjectDetail = () => {
         <meta property="og:image" content={normalizedImagePath} />
       </Helmet>
       <motion.div
-        className={clsx(projectDetailStyles.base, 'bg-background')}
+        className={clsx(projectDetailStyles.base, "bg-background")}
         variants={containerVariants}
         initial="hidden"
         animate="visible"
@@ -100,12 +109,18 @@ const ProjectDetail = () => {
               </Typography>
               <div className={projectDetailStyles.techTags}>
                 {project.tech.map((tech, index) => (
-                  <span key={`${tech}-${index}`} className={projectDetailStyles.techTags}>
+                  <span
+                    key={`${tech}-${index}`}
+                    className={projectDetailStyles.techTags}
+                  >
                     {tech}
                   </span>
                 ))}
               </div>
-              <motion.div className={projectDetailStyles.details} variants={containerVariants}>
+              <motion.div
+                className={projectDetailStyles.details}
+                variants={containerVariants}
+              >
                 <div>
                   <Typography
                     variant={TypographyVariant.H3}
@@ -129,8 +144,13 @@ const ProjectDetail = () => {
                   </Typography>
                   <ul className={projectDetailStyles.list}>
                     {project.details.challenges.map((challenge, index) => (
-                      <li key={`challenge-${index}`} className={projectDetailStyles.listItem}>
-                        <Typography variant={TypographyVariant.P}>{challenge}</Typography>
+                      <li
+                        key={`challenge-${index}`}
+                        className={projectDetailStyles.listItem}
+                      >
+                        <Typography variant={TypographyVariant.P}>
+                          {challenge}
+                        </Typography>
                       </li>
                     ))}
                   </ul>
@@ -144,8 +164,13 @@ const ProjectDetail = () => {
                   </Typography>
                   <ul className={projectDetailStyles.list}>
                     {project.details.solutions.map((solution, index) => (
-                      <li key={`solution-${index}`} className={projectDetailStyles.listItem}>
-                        <Typography variant={TypographyVariant.P}>{solution}</Typography>
+                      <li
+                        key={`solution-${index}`}
+                        className={projectDetailStyles.listItem}
+                      >
+                        <Typography variant={TypographyVariant.P}>
+                          {solution}
+                        </Typography>
                       </li>
                     ))}
                   </ul>

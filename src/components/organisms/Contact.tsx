@@ -1,15 +1,15 @@
-import { memo, useState } from 'react';
-import { motion } from 'framer-motion';
-import { usePortfolioStore } from '@/utils/config';
-import Button from '@/components/atoms/Button';
-import Icon from '@/components/atoms/Icon';
-import Typography from '@/components/atoms/Typography';
-import { Mail, MapPin, Github } from 'lucide-react';
-import { containerVariants } from '@/utils/animations';
-import { contactStyles } from '@/utils/styles';
-import { isValidUrl } from '@/utils/helpers';
-import { TypographyVariant, Variant, Size } from '@/utils/types';
-import clsx from 'clsx';
+import { memo, useState } from "react";
+import { motion } from "framer-motion";
+import { usePortfolioStore } from "@/utils/config";
+import Button from "@/components/atoms/Button";
+import Icon from "@/components/atoms/Icon";
+import Typography from "@/components/atoms/Typography";
+import { Mail, MapPin, Github } from "lucide-react";
+import { containerVariants } from "@/utils/animations";
+import { contactStyles } from "@/utils/styles";
+import { isValidUrl } from "@/utils/helpers";
+import { TypographyVariant, Variant, Size } from "@/utils/types";
+import clsx from "clsx";
 
 // Enhanced with mailto validation and analytics
 const Contact = () => {
@@ -18,7 +18,7 @@ const Contact = () => {
 
   const handleEmailClick = () => {
     if (!contact.email || !isValidUrl(`mailto:${contact.email}`)) {
-      console.warn('Invalid email address');
+      console.warn("Invalid email address");
       return;
     }
     setIsEmailLoading(true);
@@ -28,13 +28,13 @@ const Contact = () => {
   };
 
   if (!contact) {
-    console.warn('Contact section requires portfolio store data');
+    console.warn("Contact section requires portfolio store data");
     return null;
   }
 
   return (
     <motion.section
-      className={clsx(contactStyles.base, 'w-full')}
+      className={clsx(contactStyles.base, "w-full")}
       variants={containerVariants}
       initial="hidden"
       animate="visible"
@@ -42,7 +42,10 @@ const Contact = () => {
       aria-labelledby="contact-title"
     >
       <div className={contactStyles.container}>
-        <motion.div className={contactStyles.header} variants={containerVariants}>
+        <motion.div
+          className={contactStyles.header}
+          variants={containerVariants}
+        >
           <Typography
             variant={TypographyVariant.H2}
             id="contact-title"
@@ -67,7 +70,11 @@ const Contact = () => {
             role="listitem"
           >
             <div className={contactStyles.iconWrapper}>
-              <Icon icon={Mail} className={contactStyles.icon} aria-hidden="true" />
+              <Icon
+                icon={Mail}
+                className={contactStyles.icon}
+                aria-hidden="true"
+              />
             </div>
             <Typography
               variant={TypographyVariant.H3}
@@ -80,9 +87,9 @@ const Contact = () => {
             <Typography
               variant={TypographyVariant.P}
               className="text-accent text-sm xs:text-base"
-              aria-label={`Email: ${contact.email || 'Not provided'}`}
+              aria-label={`Email: ${contact.email || "Not provided"}`}
             >
-              {contact.email || 'Not provided'}
+              {contact.email || "Not provided"}
             </Typography>
           </motion.div>
 
@@ -92,7 +99,11 @@ const Contact = () => {
             role="listitem"
           >
             <div className={contactStyles.iconWrapper}>
-              <Icon icon={MapPin} className={contactStyles.icon} aria-hidden="true" />
+              <Icon
+                icon={MapPin}
+                className={contactStyles.icon}
+                aria-hidden="true"
+              />
             </div>
             <Typography
               variant={TypographyVariant.H3}
@@ -119,7 +130,7 @@ const Contact = () => {
           aria-label="Contact actions"
         >
           <Button
-            href={contact.email ? `mailto:${contact.email}` : '#'}
+            href={contact.email ? `mailto:${contact.email}` : "#"}
             variant={Variant.Primary}
             size={Size.Medium}
             ariaLabel="Send email"

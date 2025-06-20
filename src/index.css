@@ -4,12 +4,12 @@
 
 /* Custom CSS Variables */
 :root {
-  --primary: #1E3A8A;
-  --primary-dark: #1E40AF;
+  --primary: #1e3a8a;
+  --primary-dark: #1e40af;
   --secondary: #059669;
   --secondary-dark: #047857;
-  --accent: #6B7280;
-  --background: #F9FAFB;
+  --accent: #6b7280;
+  --background: #f9fafb;
   --text: #111827;
 }
 
@@ -43,7 +43,9 @@
 
   /* Respect prefers-reduced-motion */
   @media (prefers-reduced-motion: reduce) {
-    *, *::before, *::after {
+    *,
+    *::before,
+    *::after {
       animation: none !important;
       transition: none !important;
     }

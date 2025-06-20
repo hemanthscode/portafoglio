@@ -1,15 +1,25 @@
-import { memo, useCallback, useState } from 'react';
-import { motion } from 'framer-motion';
-import { usePortfolioStore } from '@/utils/config';
-import Button from '@/components/atoms/Button';
-import Icon from '@/components/atoms/Icon';
-import Typography from '@/components/atoms/Typography';
-import { containerVariants, heroCardVariants, cardVariants, overlayVariants } from '@/utils/animations';
-import { aboutPageStyles } from '@/utils/styles';
-import { isValidUrl } from '@/utils/helpers';
-import { Helmet } from 'react-helmet-async';
-import { TypographyVariant, Variant, Size, type AboutCard } from '@/utils/types';
-import clsx from 'clsx';
+import { memo, useCallback, useState } from "react";
+import { motion } from "framer-motion";
+import { usePortfolioStore } from "@/utils/config";
+import Button from "@/components/atoms/Button";
+import Icon from "@/components/atoms/Icon";
+import Typography from "@/components/atoms/Typography";
+import {
+  containerVariants,
+  heroCardVariants,
+  cardVariants,
+  overlayVariants,
+} from "@/utils/animations";
+import { aboutPageStyles } from "@/utils/styles";
+import { isValidUrl } from "@/utils/helpers";
+import { Helmet } from "react-helmet-async";
+import {
+  TypographyVariant,
+  Variant,
+  Size,
+  type AboutCard,
+} from "@/utils/types";
+import clsx from "clsx";
 
 /**
  * The About page displaying a dynamic grid of cards with hover effects and a CTA.
@@ -21,22 +31,24 @@ const AboutPage = () => {
 
   const getSizeClasses = useCallback((size: Size) => {
     return clsx({
-      'md:col-span-2 md:row-span-2 min-h-[300px] xs:min-h-[320px]': size === Size.Large,
-      'md:col-span-2 min-h-[200px] xs:min-h-[220px]': size === Size.Medium,
-      'min-h-[150px] xs:min-h-[170px]': size === Size.Small,
+      "md:col-span-2 md:row-span-2 min-h-[300px] xs:min-h-[320px]":
+        size === Size.Large,
+      "md:col-span-2 min-h-[200px] xs:min-h-[220px]": size === Size.Medium,
+      "min-h-[150px] xs:min-h-[170px]": size === Size.Small,
     });
   }, []);
 
   const getTypographyClasses = (size: Size) => {
     return {
       title: clsx({
-        'text-2xl xs:text-3xl sm:text-4xl': size === Size.Large,
-        'text-lg xs:text-xl sm:text-2xl': size === Size.Medium,
-        'text-base xs:text-lg sm:text-xl': size === Size.Small,
+        "text-2xl xs:text-3xl sm:text-4xl": size === Size.Large,
+        "text-lg xs:text-xl sm:text-2xl": size === Size.Medium,
+        "text-base xs:text-lg sm:text-xl": size === Size.Small,
       }),
       content: clsx({
-        'text-sm xs:text-base sm:text-lg': size === Size.Large,
-        'text-xs xs:text-sm sm:text-base': size === Size.Medium || size === Size.Small,
+        "text-sm xs:text-base sm:text-lg": size === Size.Large,
+        "text-xs xs:text-sm sm:text-base":
+          size === Size.Medium || size === Size.Small,
       }),
     };
   };
@@ -49,28 +61,37 @@ const AboutPage = () => {
           name="description"
           content="Learn more about Hemanth Sayimpu, a full-stack developer passionate about creating user-centric web applications."
         />
-        <meta name="keywords" content="about, developer, full-stack, react, typescript" />
+        <meta
+          name="keywords"
+          content="about, developer, full-stack, react, typescript"
+        />
         <meta property="og:title" content="About | Hemanth Sayimpu" />
         <meta
           property="og:description"
           content="Discover the journey and skills of Hemanth Sayimpu in web development."
         />
         <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://hemanthscode.github.io/about" />
+        <meta
+          property="og:url"
+          content="https://hemanthscode.github.io/about"
+        />
         <meta
           property="og:image"
           content="https://images.unsplash.com/photo-1516321310762-479437144403"
         />
       </Helmet>
       <motion.div
-        className={clsx(aboutPageStyles.base, 'bg-background')}
+        className={clsx(aboutPageStyles.base, "bg-background")}
         variants={containerVariants}
         initial="hidden"
         animate="visible"
         role="main"
         aria-labelledby="about-page-title"
       >
-        <motion.div className={aboutPageStyles.header} variants={containerVariants}>
+        <motion.div
+          className={aboutPageStyles.header}
+          variants={containerVariants}
+        >
           <Typography
             variant={TypographyVariant.H1}
             id="about-page-title"
@@ -100,7 +121,9 @@ const AboutPage = () => {
                 return (
                   <motion.button
                     key={card.id}
-                    variants={card.type === 'hero' ? heroCardVariants : cardVariants}
+                    variants={
+                      card.type === "hero" ? heroCardVariants : cardVariants
+                    }
                     initial="hidden"
                     animate="visible"
                     transition={{ delay: index * 0.1 }}
@@ -108,7 +131,7 @@ const AboutPage = () => {
                       aboutPageStyles.card,
                       getSizeClasses(card.size),
                       card.bgColor,
-                      'relative overflow-hidden group'
+                      "relative overflow-hidden group",
                     )}
                     onMouseEnter={() => setActiveCard(card.id)}
                     onMouseLeave={() => setActiveCard(null)}
@@ -124,16 +147,26 @@ const AboutPage = () => {
                           <Icon
                             icon={card.icon}
                             className={clsx(
-                              card.textColor || 'text-white',
-                              card.size === Size.Large ? 'w-8 h-8 xs:w-9 xs:h-9' : 'w-6 h-6 xs:w-7 xs:h-7'
+                              card.textColor || "text-white",
+                              card.size === Size.Large
+                                ? "w-8 h-8 xs:w-9 xs:h-9"
+                                : "w-6 h-6 xs:w-7 xs:h-7",
                             )}
                             aria-hidden="true"
                           />
                         </div>
                       )}
                       <Typography
-                        variant={card.size === Size.Large ? TypographyVariant.H2 : TypographyVariant.H3}
-                        className={clsx(typographyClasses.title, card.textColor || 'text-white', 'mb-2 xs:mb-3')}
+                        variant={
+                          card.size === Size.Large
+                            ? TypographyVariant.H2
+                            : TypographyVariant.H3
+                        }
+                        className={clsx(
+                          typographyClasses.title,
+                          card.textColor || "text-white",
+                          "mb-2 xs:mb-3",
+                        )}
                         id={`card-${card.id}`}
                         role="heading"
                         aria-level={card.size === Size.Large ? 2 : 3}
@@ -144,8 +177,8 @@ const AboutPage = () => {
                         <Typography
                           variant={TypographyVariant.P}
                           className={clsx(
-                            'text-sm xs:text-base sm:text-lg opacity-80 mb-3 xs:mb-4',
-                            card.textColor || 'text-white'
+                            "text-sm xs:text-base sm:text-lg opacity-80 mb-3 xs:mb-4",
+                            card.textColor || "text-white",
                           )}
                         >
                           {card.subtitle}
@@ -153,7 +186,10 @@ const AboutPage = () => {
                       )}
                       <Typography
                         variant={TypographyVariant.P}
-                        className={clsx(typographyClasses.content, card.textColor || 'text-white')}
+                        className={clsx(
+                          typographyClasses.content,
+                          card.textColor || "text-white",
+                        )}
                       >
                         {card.content}
                       </Typography>
@@ -162,15 +198,15 @@ const AboutPage = () => {
                       className={aboutPageStyles.cardOverlay}
                       variants={overlayVariants}
                       initial="hidden"
-                      animate={activeCard === card.id ? 'visible' : 'hidden'}
+                      animate={activeCard === card.id ? "visible" : "hidden"}
                     />
-                    {card.type === 'hero' && (
+                    {card.type === "hero" && (
                       <div
                         className={aboutPageStyles.heroDecoration}
                         aria-hidden="true"
                       />
                     )}
-                    {card.type === 'stat' && (
+                    {card.type === "stat" && (
                       <div
                         className={aboutPageStyles.statDecoration}
                         aria-hidden="true"

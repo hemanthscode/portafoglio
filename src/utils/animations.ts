@@ -1,6 +1,8 @@
-import type { Variants } from 'framer-motion';
+import type { Variants } from "framer-motion";
 
-const prefersReducedMotion = typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const prefersReducedMotion =
+  typeof window !== "undefined" &&
+  window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 const disableAnimations: Variants = {
   hover: { scale: 1, y: 0, transition: { duration: 0 } },
@@ -31,19 +33,19 @@ export const itemVariants: Variants = {
 };
 
 export const menuVariants: Variants = {
-  closed: { opacity: 0, x: '-100%' },
+  closed: { opacity: 0, x: "-100%" },
   open: {
     opacity: 1,
     x: 0,
     transition: { duration: 0.3, ease: [0.4, 0, 0.2, 1] },
   },
-  exit: { opacity: 0, x: '-100%', transition: { duration: 0.3 } },
+  exit: { opacity: 0, x: "-100%", transition: { duration: 0.3 } },
 };
 
 export const buttonVariants: Variants = {
   hover: {
     scale: 1.05,
-    transition: { type: 'spring', stiffness: 400, damping: 10 },
+    transition: { type: "spring", stiffness: 400, damping: 10 },
   },
   tap: { scale: 0.95 },
   disabled: { opacity: 0.5 },
@@ -59,7 +61,7 @@ export const cardVariants: Variants = {
   hover: {
     scale: 1.02,
     y: -5,
-    transition: { type: 'spring', stiffness: 300, damping: 20 },
+    transition: { type: "spring", stiffness: 300, damping: 20 },
   },
   tap: { scale: 0.98 },
   exit: { opacity: 0, y: 20, transition: { duration: 0.3 } },
@@ -68,7 +70,7 @@ export const cardVariants: Variants = {
 export const socialLinkVariants: Variants = {
   hover: {
     scale: 1.2,
-    transition: { type: 'spring', stiffness: 400, damping: 10 },
+    transition: { type: "spring", stiffness: 400, damping: 10 },
   },
   tap: { scale: 0.95 },
 };
@@ -83,7 +85,7 @@ export const heroCardVariants: Variants = {
   hover: {
     scale: 1.02,
     y: -5,
-    transition: { type: 'spring', stiffness: 300, damping: 20 },
+    transition: { type: "spring", stiffness: 300, damping: 20 },
   },
   tap: { scale: 0.98 },
   exit: { opacity: 0, y: 50, transition: { duration: 0.3 } },
@@ -100,7 +102,7 @@ export const overlayVariants: Variants = {
 
 export const badgeVariants: Variants = {
   hover: {
-    backgroundColor: 'rgba(229, 231, 235, 0.8)',
+    backgroundColor: "rgba(229, 231, 235, 0.8)",
     transition: { duration: 0.2 },
   },
 };
@@ -110,7 +112,11 @@ export const detailVariants: Variants = {
   visible: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.6, ease: [0.25, 0.1, 0.25, 1], staggerChildren: 0.2 },
+    transition: {
+      duration: 0.6,
+      ease: [0.25, 0.1, 0.25, 1],
+      staggerChildren: 0.2,
+    },
   },
   exit: { opacity: 0, y: 30, transition: { duration: 0.3 } },
 };

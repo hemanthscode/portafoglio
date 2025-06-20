@@ -1,45 +1,45 @@
-import type { LucideIcon } from 'lucide-react';
-import type { ReactNode, ComponentType, ReactElement } from 'react';
+import type { LucideIcon } from "lucide-react";
+import type { ReactNode, ComponentType, ReactElement } from "react";
 
 export enum Variant {
-  Primary = 'primary',
-  Secondary = 'secondary',
-  Outline = 'outline',
+  Primary = "primary",
+  Secondary = "secondary",
+  Outline = "outline",
 }
 
 export enum Size {
-  Small = 'sm',
-  Medium = 'md',
-  Large = 'lg',
+  Small = "sm",
+  Medium = "md",
+  Large = "lg",
 }
 
 export enum TypographyVariant {
-  H1 = 'h1',
-  H2 = 'h2',
-  H3 = 'h3',
-  P = 'p',
-  Span = 'span',
+  H1 = "h1",
+  H2 = "h2",
+  H3 = "h3",
+  P = "p",
+  Span = "span",
 }
 
 export enum CardType {
-  Hero = 'hero',
-  Story = 'story',
-  Skill = 'skill',
-  Image = 'image',
-  Passion = 'passion',
-  Stat = 'stat',
-  Philosophy = 'philosophy',
-  Hobby = 'hobby',
-  Adventure = 'adventure',
+  Hero = "hero",
+  Story = "story",
+  Skill = "skill",
+  Image = "image",
+  Passion = "passion",
+  Stat = "stat",
+  Philosophy = "philosophy",
+  Hobby = "hobby",
+  Adventure = "adventure",
 }
 
 export enum ProjectCategory {
-  Web = 'web',
-  Mobile = 'mobile',
-  AI = 'ai',
-  Data = 'data',
-  IoT = 'iot',
-  Other = 'other',
+  Web = "web",
+  Mobile = "mobile",
+  AI = "ai",
+  Data = "data",
+  IoT = "iot",
+  Other = "other",
 }
 
 export interface ButtonProps {
@@ -103,7 +103,7 @@ export interface Project {
 export interface ProjectCardProps {
   project: Project;
   className?: string;
-  cardType?: 'image' | 'content';
+  cardType?: "image" | "content";
   role?: string;
 }
 

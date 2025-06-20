@@ -1,11 +1,11 @@
-import { memo } from 'react';
-import { motion } from 'framer-motion';
-import { Link } from 'react-router-dom';
-import clsx from 'clsx';
-import { isValidUrl } from '@/utils/helpers';
-import { buttonVariants } from '@/utils/animations';
-import { buttonStyles } from '@/utils/styles';
-import { Size, Variant, type ButtonProps } from '@/utils/types';
+import { memo } from "react";
+import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
+import clsx from "clsx";
+import { isValidUrl } from "@/utils/helpers";
+import { buttonVariants } from "@/utils/animations";
+import { buttonStyles } from "@/utils/styles";
+import { Size, Variant, type ButtonProps } from "@/utils/types";
 
 // Enhanced with stricter prop validation and role for custom components
 const Button = ({
@@ -26,7 +26,7 @@ const Button = ({
 }: ButtonProps) => {
   // Ensure children is defined to prevent empty buttons
   if (!children) {
-    console.warn('Button component requires children');
+    console.warn("Button component requires children");
     return null;
   }
 
@@ -39,12 +39,12 @@ const Button = ({
 
   const commonProps = {
     className: classes,
-    'aria-label': ariaLabel,
-    'aria-disabled': disabled || loading,
+    "aria-label": ariaLabel,
+    "aria-disabled": disabled || loading,
     variants: buttonVariants,
-    whileHover: disabled || loading ? undefined : 'hover',
-    whileTap: disabled || loading ? undefined : 'tap',
-    role: ComponentOverride ? 'button' : undefined, // Added for custom components
+    whileHover: disabled || loading ? undefined : "hover",
+    whileTap: disabled || loading ? undefined : "tap",
+    role: ComponentOverride ? "button" : undefined, // Added for custom components
   };
 
   const renderContent = () => (
@@ -52,7 +52,7 @@ const Button = ({
       {loading && (
         <span
           className={clsx(
-            'mr-2 animate-spin inline-block border-2 border-current border-t-transparent rounded-full',
+            "mr-2 animate-spin inline-block border-2 border-current border-t-transparent rounded-full",
             buttonStyles.spinnerSizes[size],
           )}
           aria-hidden="true"
@@ -65,7 +65,11 @@ const Button = ({
 
   if (ComponentOverride) {
     const MotionComponent = motion(ComponentOverride);
-    return <MotionComponent {...commonProps} onClick={onClick}>{renderContent()}</MotionComponent>;
+    return (
+      <MotionComponent {...commonProps} onClick={onClick}>
+        {renderContent()}
+      </MotionComponent>
+    );
   }
 
   if (to && isValidUrl(to)) {
@@ -83,8 +87,8 @@ const Button = ({
       <motion.a
         {...commonProps}
         href={href}
-        target={target || (isExternal ? '_blank' : undefined)}
-        rel={isExternal ? rel || 'noopener noreferrer' : rel}
+        target={target || (isExternal ? "_blank" : undefined)}
+        rel={isExternal ? rel || "noopener noreferrer" : rel}
         onClick={onClick}
       >
         {renderContent()}

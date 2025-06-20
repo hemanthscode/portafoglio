@@ -1,30 +1,33 @@
-import { memo, useMemo } from 'react';
-import { motion } from 'framer-motion';
-import { usePortfolioStore } from '@/utils/config';
-import Button from '@/components/atoms/Button';
-import Icon from '@/components/atoms/Icon';
-import LazyImage from '@/components/atoms/LazyImage';
-import Typography from '@/components/atoms/Typography';
-import { Github, ArrowRight, Code2 } from 'lucide-react';
-import { containerVariants, itemVariants } from '@/utils/animations';
-import { heroStyles } from '@/utils/styles';
-import { isValidUrl } from '@/utils/helpers';
-import { TypographyVariant, Variant, Size } from '@/utils/types';
-import clsx from 'clsx';
+import { memo, useMemo } from "react";
+import { motion } from "framer-motion";
+import { usePortfolioStore } from "@/utils/config";
+import Button from "@/components/atoms/Button";
+import Icon from "@/components/atoms/Icon";
+import LazyImage from "@/components/atoms/LazyImage";
+import Typography from "@/components/atoms/Typography";
+import { Github, ArrowRight, Code2 } from "lucide-react";
+import { containerVariants, itemVariants } from "@/utils/animations";
+import { heroStyles } from "@/utils/styles";
+import { isValidUrl } from "@/utils/helpers";
+import { TypographyVariant, Variant, Size } from "@/utils/types";
+import clsx from "clsx";
 
 // Enhanced with image optimization and structured data
 const HeroGeometric = () => {
   const { hero } = usePortfolioStore();
-  const nameParts = useMemo(() => hero.name.split(' '), [hero.name]);
+  const nameParts = useMemo(() => hero.name.split(" "), [hero.name]);
 
   if (!hero) {
-    console.warn('HeroGeometric requires portfolio store data');
+    console.warn("HeroGeometric requires portfolio store data");
     return null;
   }
 
   return (
     <motion.section
-      className={clsx(heroStyles.base, 'min-h-[calc(100vh-4rem)] w-full flex items-center justify-center')}
+      className={clsx(
+        heroStyles.base,
+        "min-h-[calc(100vh-4rem)] w-full flex items-center justify-center",
+      )}
       variants={containerVariants}
       initial="hidden"
       animate="visible"
@@ -139,11 +142,11 @@ const HeroGeometric = () => {
       {/* Added structured data for SEO */}
       <script type="application/ld+json">
         {JSON.stringify({
-          '@context': 'https://schema.org',
-          '@type': 'Person',
+          "@context": "https://schema.org",
+          "@type": "Person",
           name: hero.name,
-          jobTitle: 'Full-Stack Developer',
-          url: 'https://hemanthscode.github.io/portfolio',
+          jobTitle: "Full-Stack Developer",
+          url: "https://hemanthscode.github.io/portfolio",
         })}
       </script>
     </motion.section>

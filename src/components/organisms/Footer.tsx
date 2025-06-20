@@ -1,27 +1,27 @@
-import { memo } from 'react';
-import { motion } from 'framer-motion';
-import { usePortfolioStore } from '@/utils/config';
-import SocialLink from '@/components/molecules/SocialLink';
-import Typography from '@/components/atoms/Typography';
-import { Github, Linkedin } from 'lucide-react';
-import { isValidUrl } from '@/utils/helpers';
-import { containerVariants } from '@/utils/animations';
-import { footerStyles } from '@/utils/styles';
-import { TypographyVariant } from '@/utils/types';
-import clsx from 'clsx';
+import { memo } from "react";
+import { motion } from "framer-motion";
+import { usePortfolioStore } from "@/utils/config";
+import SocialLink from "@/components/molecules/SocialLink";
+import Typography from "@/components/atoms/Typography";
+import { Github, Linkedin } from "lucide-react";
+import { isValidUrl } from "@/utils/helpers";
+import { containerVariants } from "@/utils/animations";
+import { footerStyles } from "@/utils/styles";
+import { TypographyVariant } from "@/utils/types";
+import clsx from "clsx";
 
 // Enhanced with fallback for missing URLs
 const Footer = () => {
   const { footer } = usePortfolioStore();
 
   if (!footer) {
-    console.warn('Footer requires portfolio store data');
+    console.warn("Footer requires portfolio store data");
     return null;
   }
 
   return (
     <motion.footer
-      className={clsx(footerStyles.base, 'w-full')}
+      className={clsx(footerStyles.base, "w-full")}
       variants={containerVariants}
       initial="hidden"
       animate="visible"

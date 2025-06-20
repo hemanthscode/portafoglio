@@ -1,20 +1,24 @@
-import { Suspense, lazy } from 'react';
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { HelmetProvider } from 'react-helmet-async';
-import Navbar from '@/components/organisms/Navbar';
-import Footer from '@/components/organisms/Footer';
-import LoadingSpinner from '@/components/atoms/LoadingSpinner';
+import { Suspense, lazy } from "react";
+import { HashRouter, Routes, Route, Navigate } from "react-router-dom";
+import { HelmetProvider } from "react-helmet-async";
+import Navbar from "@/components/organisms/Navbar";
+import Footer from "@/components/organisms/Footer";
+import LoadingSpinner from "@/components/atoms/LoadingSpinner";
 
-const Home = lazy(() => import('@/pages/Home'));
-const AboutPage = lazy(() => import('@/pages/About'));
-const WorkPage = lazy(() => import('@/pages/Work'));
-const ContactPage = lazy(() => import('@/pages/Contact'));
-const ProjectDetail = lazy(() => import('@/pages/ProjectDetail'));
-const NotFound = lazy(() => import('@/pages/NotFound'));
+const Home = lazy(() => import("@/pages/Home"));
+const AboutPage = lazy(() => import("@/pages/About"));
+const WorkPage = lazy(() => import("@/pages/Work"));
+const ContactPage = lazy(() => import("@/pages/Contact"));
+const ProjectDetail = lazy(() => import("@/pages/ProjectDetail"));
+const NotFound = lazy(() => import("@/pages/NotFound"));
 
 function RouteErrorBoundary({ children }: { children: React.ReactNode }) {
   return (
-    <Suspense fallback={<LoadingSpinner className="flex justify-center items-center h-screen" />}>
+    <Suspense
+      fallback={
+        <LoadingSpinner className="flex justify-center items-center h-screen" />
+      }
+    >
       {children}
     </Suspense>
   );
@@ -23,7 +27,7 @@ function RouteErrorBoundary({ children }: { children: React.ReactNode }) {
 function App() {
   return (
     <HelmetProvider>
-      <BrowserRouter basename="/portfolio">
+      <HashRouter basename="/portfolio">
         <div className="flex flex-col min-h-screen bg-background">
           <Navbar brandName="Hemanth" />
           <main className="flex-grow">
@@ -84,7 +88,7 @@ function App() {
           </main>
           <Footer />
         </div>
-      </BrowserRouter>
+      </HashRouter>
     </HelmetProvider>
   );
 }

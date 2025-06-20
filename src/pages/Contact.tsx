@@ -1,10 +1,10 @@
-import { memo } from 'react';
-import { motion } from 'framer-motion';
-import Contact from '@/components/organisms/Contact';
-import { containerVariants } from '@/utils/animations';
-import { contactPageStyles } from '@/utils/styles';
-import { Helmet } from 'react-helmet-async';
-import clsx from 'clsx';
+import { memo } from "react";
+import { motion } from "framer-motion";
+import Contact from "@/components/organisms/Contact";
+import { containerVariants } from "@/utils/animations";
+import { contactPageStyles } from "@/utils/styles";
+import { Helmet } from "react-helmet-async";
+import clsx from "clsx";
 
 /**
  * The Contact page wrapping the Contact organism with SEO meta tags.
@@ -26,14 +26,17 @@ const ContactPage = () => {
           content="Reach out to Hemanth Sayimpu for project discussions or opportunities."
         />
         <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://hemanthscode.github.io/contact" />
+        <meta
+          property="og:url"
+          content="https://hemanthscode.github.io/contact"
+        />
         <meta
           property="og:image"
           content="https://images.unsplash.com/photo-1516321310762-479437144403"
         />
       </Helmet>
       <motion.div
-        className={clsx(contactPageStyles.base, 'bg-background')}
+        className={clsx(contactPageStyles.base, "bg-background")}
         variants={containerVariants}
         initial="hidden"
         animate="visible"

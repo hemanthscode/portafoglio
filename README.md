@@ -14,37 +14,37 @@ Lazy-loaded images with custom LazyImage component
 Project Structure
 my-portfolio/
 ├── src/
-│   ├── components/
-│   │   ├── atoms/
-│   │   │   ├── Button.tsx
-│   │   │   ├── Icon.tsx
-│   │   │   ├── LazyImage.tsx
-│   │   │   └── Typography.tsx
-│   │   ├── molecules/
-│   │   │   ├── ProjectCard.tsx
-│   │   │   └── SocialLink.tsx
-│   │   ├── organisms/
-│   │   │   ├── About.tsx
-│   │   │   ├── Contact.tsx
-│   │   │   ├── Footer.tsx
-│   │   │   ├── HeroGeometric.tsx
-│   │   │   ├── Navbar.tsx
-│   │   │   └── WorkTimeline.tsx
-│   ├── pages/
-│   │   ├── AboutPage.tsx
-│   │   ├── ContactPage.tsx
-│   │   ├── Home.tsx
-│   │   ├── ProjectDetail.tsx
-│   │   └── WorkPage.tsx
-│   ├── utils/
-│   │   ├── animations.ts
-│   │   ├── config.ts
-│   │   ├── helpers.ts
-│   │   ├── styles.ts
-│   │   └── types.ts
-│   ├── App.tsx
-│   ├── index.css
-│   └── main.tsx
+│ ├── components/
+│ │ ├── atoms/
+│ │ │ ├── Button.tsx
+│ │ │ ├── Icon.tsx
+│ │ │ ├── LazyImage.tsx
+│ │ │ └── Typography.tsx
+│ │ ├── molecules/
+│ │ │ ├── ProjectCard.tsx
+│ │ │ └── SocialLink.tsx
+│ │ ├── organisms/
+│ │ │ ├── About.tsx
+│ │ │ ├── Contact.tsx
+│ │ │ ├── Footer.tsx
+│ │ │ ├── HeroGeometric.tsx
+│ │ │ ├── Navbar.tsx
+│ │ │ └── WorkTimeline.tsx
+│ ├── pages/
+│ │ ├── AboutPage.tsx
+│ │ ├── ContactPage.tsx
+│ │ ├── Home.tsx
+│ │ ├── ProjectDetail.tsx
+│ │ └── WorkPage.tsx
+│ ├── utils/
+│ │ ├── animations.ts
+│ │ ├── config.ts
+│ │ ├── helpers.ts
+│ │ ├── styles.ts
+│ │ └── types.ts
+│ ├── App.tsx
+│ ├── index.css
+│ └── main.tsx
 ├── index.html
 ├── package.json
 ├── vite.config.ts
@@ -59,13 +59,9 @@ Setup
 Clone the repository:git clone https://github.com/hemanthscode/portfolio.git
 cd portfolio
 
-
 Install dependencies:npm install
 
-
 Run the development server:npm run dev
-
-
 
 Build and Deployment
 
@@ -101,4 +97,3 @@ All links are validated with isValidUrl helper.
 Routing uses basename="/portfolio" for GitHub Pages.
 Images are lazy-loaded with LazyImage.tsx.
 Accessibility is ensured with eslint-plugin-jsx-a11y.
-

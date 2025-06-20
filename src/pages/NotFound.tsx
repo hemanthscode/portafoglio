@@ -1,12 +1,12 @@
-import { memo } from 'react';
-import { motion } from 'framer-motion';
-import { Link } from 'react-router-dom';
-import Typography from '@/components/atoms/Typography';
-import Button from '@/components/atoms/Button';
-import { containerVariants } from '@/utils/animations';
-import { TypographyVariant, Variant, Size } from '@/utils/types';
-import { Helmet } from 'react-helmet-async';
-import clsx from 'clsx';
+import { memo } from "react";
+import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
+import Typography from "@/components/atoms/Typography";
+import Button from "@/components/atoms/Button";
+import { containerVariants } from "@/utils/animations";
+import { TypographyVariant, Variant, Size } from "@/utils/types";
+import { Helmet } from "react-helmet-async";
+import clsx from "clsx";
 
 const NotFound = () => {
   return (
@@ -20,7 +20,10 @@ const NotFound = () => {
     >
       <Helmet>
         <title>404 - Page Not Found | Hemanth Sayimpu</title>
-        <meta name="description" content="The page you are looking for does not exist. Return to the homepage to explore Hemanth Sayimpu's portfolio." />
+        <meta
+          name="description"
+          content="The page you are looking for does not exist. Return to the homepage to explore Hemanth Sayimpu's portfolio."
+        />
         <meta name="robots" content="noindex" />
       </Helmet>
       <Typography
@@ -32,7 +35,10 @@ const NotFound = () => {
       >
         404 - Page Not Found
       </Typography>
-      <Typography variant={TypographyVariant.P} className="text-lg text-accent mb-8 text-center">
+      <Typography
+        variant={TypographyVariant.P}
+        className="text-lg text-accent mb-8 text-center"
+      >
         Oops! The page you're looking for doesn't exist or has been moved.
       </Typography>
       <Button

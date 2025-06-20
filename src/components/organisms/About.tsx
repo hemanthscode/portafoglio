@@ -1,15 +1,19 @@
-import { memo, useMemo } from 'react';
-import { motion } from 'framer-motion';
-import { usePortfolioStore } from '@/utils/config';
-import Button from '@/components/atoms/Button';
-import Icon from '@/components/atoms/Icon';
-import Typography from '@/components/atoms/Typography';
-import { ArrowRight, Code } from 'lucide-react';
-import { badgeVariants, cardVariants, containerVariants } from '@/utils/animations';
-import { aboutStyles } from '@/utils/styles';
-import { TypographyVariant, Variant, Size, CardType } from '@/utils/types';
-import clsx from 'clsx';
-import { isValidUrl } from '@/utils/helpers';
+import { memo, useMemo } from "react";
+import { motion } from "framer-motion";
+import { usePortfolioStore } from "@/utils/config";
+import Button from "@/components/atoms/Button";
+import Icon from "@/components/atoms/Icon";
+import Typography from "@/components/atoms/Typography";
+import { ArrowRight, Code } from "lucide-react";
+import {
+  badgeVariants,
+  cardVariants,
+  containerVariants,
+} from "@/utils/animations";
+import { aboutStyles } from "@/utils/styles";
+import { TypographyVariant, Variant, Size, CardType } from "@/utils/types";
+import clsx from "clsx";
+import { isValidUrl } from "@/utils/helpers";
 
 // Enhanced with error boundary and focus handling
 const About = () => {
@@ -17,28 +21,30 @@ const About = () => {
 
   const heroCard = useMemo(
     () => about.cards?.find((card) => card.type === CardType.Hero),
-    [about.cards]
+    [about.cards],
   );
   const storyCards = useMemo(
     () =>
       about.cards?.filter(
-        (card) => card.type === CardType.Story && ['Syntax and Sparks', 'Code Review Enthusiast'].includes(card.title)
+        (card) =>
+          card.type === CardType.Story &&
+          ["Syntax and Sparks", "Code Review Enthusiast"].includes(card.title),
       ) || [],
-    [about.cards]
+    [about.cards],
   );
   const skillCards = useMemo(
     () => about.cards?.filter((card) => card.type === CardType.Skill) || [],
-    [about.cards]
+    [about.cards],
   );
 
   if (!about) {
-    console.warn('About section requires portfolio store data');
+    console.warn("About section requires portfolio store data");
     return null;
   }
 
   return (
     <motion.section
-      className={clsx(aboutStyles.base, 'bg-background')}
+      className={clsx(aboutStyles.base, "bg-background")}
       variants={containerVariants}
       initial="hidden"
       animate="visible"
@@ -56,7 +62,10 @@ const About = () => {
           >
             {about.title}
           </Typography>
-          <Typography variant={TypographyVariant.P} className={aboutStyles.description}>
+          <Typography
+            variant={TypographyVariant.P}
+            className={aboutStyles.description}
+          >
             {about.description}
           </Typography>
         </motion.div>
@@ -73,7 +82,7 @@ const About = () => {
                 whileTap={{ scale: 0.98 }}
                 onClick={() => {}}
                 tabIndex={0} // Added for accessibility
-                onKeyDown={(e) => e.key === 'Enter' && e.currentTarget.click()}
+                onKeyDown={(e) => e.key === "Enter" && e.currentTarget.click()}
               >
                 <Icon
                   icon={heroCard.icon || Code}
@@ -89,10 +98,16 @@ const About = () => {
                 >
                   {heroCard.title}
                 </Typography>
-                <Typography variant={TypographyVariant.P} className={aboutStyles.heroSubtitle}>
+                <Typography
+                  variant={TypographyVariant.P}
+                  className={aboutStyles.heroSubtitle}
+                >
                   {heroCard.subtitle}
                 </Typography>
-                <Typography variant={TypographyVariant.P} className={aboutStyles.heroContent}>
+                <Typography
+                  variant={TypographyVariant.P}
+                  className={aboutStyles.heroContent}
+                >
                   {heroCard.content}
                 </Typography>
               </motion.button>
@@ -111,7 +126,9 @@ const About = () => {
                     whileTap={{ scale: 0.98 }}
                     onClick={() => {}}
                     tabIndex={0} // Added for accessibility
-                    onKeyDown={(e) => e.key === 'Enter' && e.currentTarget.click()}
+                    onKeyDown={(e) =>
+                      e.key === "Enter" && e.currentTarget.click()
+                    }
                   >
                     <Icon
                       icon={skill.icon || Code}
@@ -127,7 +144,10 @@ const About = () => {
                     >
                       {skill.title}
                     </Typography>
-                    <Typography variant={TypographyVariant.P} className={aboutStyles.skillContent}>
+                    <Typography
+                      variant={TypographyVariant.P}
+                      className={aboutStyles.skillContent}
+                    >
                       {skill.content}
                     </Typography>
                   </motion.button>
@@ -146,7 +166,7 @@ const About = () => {
                 whileTap={{ scale: 0.98 }}
                 onClick={() => {}}
                 tabIndex={0} // Added for accessibility
-                onKeyDown={(e) => e.key === 'Enter' && e.currentTarget.click()}
+                onKeyDown={(e) => e.key === "Enter" && e.currentTarget.click()}
               >
                 <div className="flex items-start space-x-3 sm:space-x-4">
                   <Icon
@@ -164,7 +184,10 @@ const About = () => {
                     >
                       {story.title}
                     </Typography>
-                    <Typography variant={TypographyVariant.P} className={aboutStyles.storyContent}>
+                    <Typography
+                      variant={TypographyVariant.P}
+                      className={aboutStyles.storyContent}
+                    >
                       {story.content}
                     </Typography>
                   </div>
@@ -190,9 +213,9 @@ const About = () => {
             ariaLabel="Learn more about me"
             className={aboutStyles.ctaButton}
             icon={<ArrowRight className="ml-2 w-5 h-5" />}
-            disabled={!isValidUrl('/about')}
+            disabled={!isValidUrl("/about")}
           >
-            {about.cta?.buttonText || 'Learn More About Me'}
+            {about.cta?.buttonText || "Learn More About Me"}
           </Button>
         </motion.div>
       </div>
