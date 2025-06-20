@@ -4,12 +4,17 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Redirecting...</title>
+    <meta name="description" content="Hemanth's Portfolio" />
+    <title>Hemanth's Portfolio</title>
+    <!-- Ensure proper SEO meta tags -->
+    <meta property="og:title" content="Hemanth's Portfolio" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://hemanthscode.github.io/portfolio/" />
+    <meta property="og:description" content="Portfolio showcasing Hemanth's projects and skills." />
+    <base href="/portfolio/" />
   </head>
   <body>
-    <script>
-      const path = window.location.pathname;
-      window.location.replace(`${window.location.origin}/portfolio/?redirect=${path}`);
-    </script>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

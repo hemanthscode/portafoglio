@@ -1,10 +1,11 @@
+// vite.config.ts
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import * as path from 'path';
 
 export default defineConfig({
   plugins: [react()],
-  base: '/portfolio',
+  base: '/portfolio/', // Ensure trailing slash for consistency
   resolve: {
     alias: {
       '@': path.resolve(process.cwd(), './src'),
@@ -22,6 +23,10 @@ export default defineConfig({
           animations: ['framer-motion'],
           icons: ['lucide-react'],
         },
+        // Ensure assets are correctly referenced
+        assetFileNames: 'assets/[name]-[hash][extname]',
+        chunkFileNames: 'assets/[name]-[hash].js',
+        entryFileNames: 'assets/[name]-[hash].js',
       },
     },
   },
