@@ -1,21 +1,23 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
 :root {
-  --color-background: #FFFFFF;
-  --color-foreground: #1F2937;
-  --color-primary: #2563EB;
-  --color-muted: #F3F4F6;
-  --color-muted-foreground: #6B7280;
-  --color-border: #E5E7EB;
+  --color-background: #ffffff;
+  --color-foreground: #1f2937;
+  --color-primary: #2563eb;
+  --color-primary-hover: #1e40af;
+  --color-muted: #f3f4f6;
+  --color-muted-foreground: #6b7280;
+  --color-border: #e5e7eb;
 }
 
-.dark {
-  --color-background: #1F2937;
-  --color-foreground: #F9FAFB;
-  --color-primary: #3B82F6;
+[data-theme='dark'] {
+  --color-background: #111827;
+  --color-foreground: #f9fafb;
+  --color-primary: #3b82f6;
+  --color-primary-hover: #2563eb;
   --color-muted: #374151;
-  --color-muted-foreground: #9CA3AF;
-  --color-border: #4B5563;
+  --color-muted-foreground: #9ca3af;
+  --color-border: #4b5563;
 }
 
 * {
@@ -29,4 +31,11 @@ body {
   background-color: var(--color-background);
   color: var(--color-foreground);
   transition: background-color 0.3s ease, color 0.3s ease;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
+/* 
+:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+} */
